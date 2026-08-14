@@ -26,157 +26,469 @@
     />
     <link rel="stylesheet" href="style.css" />
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Sekuya&family=Montserrat:wght@400;700;800&family=Inter:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+      :root {
+        --cx-bg: #0D0F0E;
+        --cx-card: #151816;
+        --cx-card-border: rgba(184, 148, 82, 0.1);
+        --cx-heading: #F1EEE6;
+        --cx-body: #C9C6BF;
+        --cx-muted: #634F2B;
+        --cx-red: #D04A3A;
+        --cx-gold: #B89452;
+        --cx-pink: #FFB4AB;
+        --cx-danger: #EF4444;
+        --cx-green: #10B981;
+        --cx-card-shadow: 8px 8px 16px rgba(0, 0, 0, 0.8), inset 2px 2px 4px 1px rgba(255, 255, 255, 0.02), inset -2px -2px 4px 1px rgba(0, 0, 0, 0.4);
+        --cx-btn-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6), inset 2px 2px 4px rgba(255, 255, 255, 0.1), inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+        --cx-pill-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4), inset 1px 1px 2px 1px rgba(255, 255, 255, 0.05);
+      }
+
+      body.cx-page {
+        background-color: var(--cx-bg);
+        background-image:
+          repeating-linear-gradient(0deg, rgba(208, 74, 58, 0.05) 0px, rgba(208, 74, 58, 0.05) 1px, transparent 1px, transparent 40px),
+          repeating-linear-gradient(90deg, rgba(208, 74, 58, 0.05) 0px, rgba(208, 74, 58, 0.05) 1px, transparent 1px, transparent 40px);
+        color: var(--cx-body);
+        font-family: 'Inter', sans-serif;
+      }
+
+      /* Header (same as register.html / leaderboard.html / credits.html) */
+      .cx-page #navbar {
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        box-sizing: border-box;
+        z-index: 1000;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 48px;
+        background: rgba(13, 15, 14, 0.8);
+        box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1), inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+      }
+
+      .cx-logo-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .cx-brand {
+        font-family: 'Sekuya', 'Montserrat', sans-serif;
+        font-weight: 400;
+        font-size: 32px;
+        letter-spacing: -1.6px;
+        color: var(--cx-red);
+      }
+
+      .cx-nav {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+
+      .cx-nav a {
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        font-size: 16px;
+        color: var(--cx-body);
+        text-decoration: none;
+        transition: color .2s linear;
+      }
+
+      .cx-nav a:hover {
+        color: var(--cx-red);
+      }
+
+      /* Main */
+      .cx-main {
+        box-sizing: border-box;
+        max-width: 760px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        padding: 128px 48px 64px;
+        gap: 24px;
+      }
+
+      .cx-card {
+        box-sizing: border-box;
+        padding: 32px;
+        background: var(--cx-card);
+        border: 1px solid var(--cx-card-border);
+        box-shadow: var(--cx-card-shadow);
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cx-section-title {
+        margin: 0;
+        display: block;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        letter-spacing: 2.1px;
+        text-transform: uppercase;
+      }
+
+      .cx-btn-pill {
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 16px 32px;
+        background: #0D0F0E;
+        box-shadow: var(--cx-btn-shadow);
+        border-radius: 24px;
+        border: none;
+        cursor: pointer;
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 0.6px;
+        color: var(--cx-red);
+        text-transform: uppercase;
+        transition: transform .15s ease;
+      }
+
+      .cx-btn-pill:hover {
+        transform: translateY(-1px);
+      }
+
+      .cx-btn-pill:disabled {
+        opacity: .5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .cx-btn-small {
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        background: #0D0F0E;
+        border: 1px solid var(--cx-card-border);
+        box-shadow: var(--cx-pill-shadow);
+        border-radius: 16px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        color: var(--cx-gold);
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: transform .15s ease;
+      }
+
+      .cx-btn-small:hover {
+        transform: translateY(-1px);
+      }
+
+      /* Quiz card */
+      .cx-quiz-card {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .cx-quiz-head {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--cx-card-border);
+      }
+
+      .cx-quiz-head .cx-section-title {
+        color: var(--cx-red);
+      }
+
+      #levelTitle {
+        margin: 0;
+        font-family: 'Sekuya', 'Montserrat', sans-serif;
+        font-weight: 400;
+        font-size: clamp(28px, 5vw, 40px);
+        letter-spacing: -1px;
+        color: var(--cx-heading);
+      }
+
       #questionText {
-        font-size: 24px;
-        margin-bottom: 20px;
+        font-family: 'Inter', sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--cx-body);
       }
 
       #imageDisplay {
-        max-width: 30vw;
-        margin-bottom: 20px;
-        border-radius: 7px;
-      }
-
-      #fileButton,
-      #answerInput,
-      #submitButton {
-        padding: 10px 20px;
-        font-size: 16px;
-        border-radius: 7px;
+        display: none;
+        max-width: 100%;
+        border-radius: 16px;
+        border: 1px solid var(--cx-card-border);
+        box-shadow: var(--cx-pill-shadow);
       }
 
       #fileButton {
-        background:
-          radial-gradient(
-            ellipse farthest-corner at right bottom,
-            #191970 0%,
-            #1e3a8a 15%,
-            #0f172a 40%,
-            #020617 70%,
-            transparent 90%
-          ),
-          radial-gradient(
-            ellipse farthest-corner at left top,
-            #1e40af 0%,
-            #3b82f6 15%,
-            #1e3a8a 40%,
-            #111827 70%,
-            #020617 100%
-          );
-        color: #fff;
-        border: none;
-        cursor: pointer;
-        margin-bottom: 20px;
+        display: none;
+        align-self: flex-start;
+      }
+
+      .cx-answer-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
       }
 
       #answerInput {
-        border: 1px solid #000;
-        margin-bottom: 20px;
+        box-sizing: border-box;
+        flex: 1 1 220px;
+        padding: 14px 18px;
+        background: #0D0F0E;
+        border: 1px solid var(--cx-card-border);
+        box-shadow: inset 2px 2px 4px 1px rgba(0, 0, 0, 0.5), inset -1px -1px 2px 1px rgba(255, 255, 255, 0.03);
+        border-radius: 16px;
+        color: var(--cx-heading);
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+      }
+
+      #answerInput::placeholder {
+        color: var(--cx-muted);
+      }
+
+      #answerInput:focus {
+        outline: none;
+        border-color: var(--cx-gold);
       }
 
       #submitButton {
-        background:
-          radial-gradient(
-            ellipse farthest-corner at right bottom,
-            #191970 0%,
-            #1e3a8a 15%,
-            #0f172a 40%,
-            #020617 70%,
-            transparent 90%
-          ),
-          radial-gradient(
-            ellipse farthest-corner at left top,
-            #1e40af 0%,
-            #3b82f6 15%,
-            #1e3a8a 40%,
-            #111827 70%,
-            #020617 100%
-          );
-        color: #fff;
-        border: none;
-        cursor: pointer;
+        flex-shrink: 0;
       }
 
-      #submitButton:disabled {
-        background-color: #0000ff60;
-        cursor: not-allowed;
+      /* State cards (nostart / khatam / banned) */
+      .cx-state-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+        padding: 56px 32px;
       }
 
+      .cx-state-icon {
+        font-size: 40px;
+        color: var(--cx-gold);
+        margin-bottom: 8px;
+      }
+
+      .cx-state-card h1 {
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: clamp(22px, 4vw, 30px);
+        color: var(--cx-heading);
+      }
+
+      .cx-state-card p,
+      .cx-state-card h3 {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        font-size: 15px;
+        color: var(--cx-body);
+      }
+
+      .cx-state-card--danger .cx-state-icon,
+      .cx-state-card--danger h1 {
+        color: var(--cx-danger);
+      }
+
+      /* Toast modal */
       .modal {
+        box-sizing: border-box;
         display: none;
         position: fixed;
-        bottom: 10px;
+        bottom: 24px;
         left: 50%;
         transform: translateX(-50%);
-        background-color: #1a5276;
-        color: #fff;
-        padding: 10px;
-        border-radius: 7px;
+        background: var(--cx-card);
+        border: 1px solid var(--cx-card-border);
+        box-shadow: var(--cx-card-shadow);
+        color: var(--cx-heading);
+        padding: 14px 24px;
+        border-radius: 16px;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
         z-index: 999;
       }
 
-      @media only screen and (max-width: 600px) {
-        #imageDisplay {
-          min-width: 70% !important;
-          max-width: auto !important;
-        }
+      .modal.cx-modal--success {
+        border-color: rgba(16, 185, 129, 0.4);
+        color: var(--cx-green);
       }
 
-      #content,
-      #nostart,
-      #khatam,
-      #banned {
-        padding: 20px;
+      .modal.cx-modal--error {
+        border-color: rgba(239, 68, 68, 0.4);
+        color: var(--cx-danger);
+      }
+
+      /* Footer (same as register.html) */
+      .cx-page footer.cx-footer {
+        background: #080909;
+        box-shadow: inset 0px 2px 8px rgba(0, 0, 0, 0.5);
+        padding: 32px 48px;
+        margin-top: 0;
+      }
+
+      .cx-footer-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 24px;
+      }
+
+      .cx-footer-brand {
+        font-family: 'Sekuya', 'Montserrat', sans-serif;
+        font-weight: 400;
+        font-size: 24px;
+        color: var(--cx-heading);
+      }
+
+      .cx-footer-copy {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        color: var(--cx-gold);
+      }
+
+      .cx-footer-links {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .cx-footer-links a {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        color: var(--cx-gold);
+        text-decoration: none;
+      }
+
+      .cx-footer-links a:hover {
+        text-decoration: underline;
+      }
+
+      @media only screen and (max-width: 700px) {
+        .cx-page #navbar {
+          padding: 12px 16px;
+        }
+
+        .cx-brand {
+          font-size: 20px;
+        }
+
+        .cx-nav {
+          gap: 14px;
+        }
+
+        .cx-nav a {
+          font-size: 14px;
+        }
+
+        .cx-card {
+          padding: 22px;
+        }
+
+        .cx-state-card {
+          padding: 40px 20px;
+        }
+
+        .cx-answer-row {
+          flex-direction: column;
+        }
+
+        #submitButton {
+          width: 100%;
+        }
       }
     </style>
   </head>
 
-  <body>
+  <body class="cx-page">
     <div id="navbar">
-      <div id="logo-container">
-        <div id="logo">
-          <img
-            src="public/images/event-badge.webp"
-            alt="Cryptonx'26 Badge"
-            border="0"
-          />
-        </div>
-        <div id="name">Cryptonx'26 <i>Freshers Edition</i></div>
+      <div class="cx-logo-container">
+        <div class="cx-brand">Cryptonx'26</div>
       </div>
-      <div id="navbar-buttons">
-        <button onclick="home()"><i class="fa-solid fa-house"></i></button>
-        <button onclick="lb()"><i class="fa-solid fa-medal"></i></button>
-        <button onclick="contri()">
-          <i class="fa-solid fa-users-gear"></i>
-        </button>
-      </div>
-    </div>
-    <div id="content" style="display: none">
-      <h1 id="levelTitle"></h1>
-      <div id="questionText"></div>
-      <img id="imageDisplay" alt="Question Image" />
-      <button id="fileButton" onclick="openFile()">View File</button>
-      <input type="text" id="answerInput" placeholder="Enter your answer" />
-      <button id="submitButton" onclick="submitAnswer()">Submit</button>
-    </div>
-    <div id="modal" class="modal" style="display: none"></div>
-    <div id="nostart" style="display: none">
-      <h1>Hunt hasn't started yet. Check back later!</h1>
-    </div>
-    <div id="khatam" style="display: none">
-      <h1>Hunt has ended!</h1>
-    </div>
-    <div id="banned" style="display: none">
-      <h1>You have been banned from the hunt!</h1>
-      <h3>Contact the organizers on Discord if you think this is a mistake.</h3>
+      <nav class="cx-nav">
+        <a href="javascript:void(0)" onclick="home()">Home</a>
+        <a href="javascript:void(0)" onclick="lb()">Leaderboard</a>
+        <a href="javascript:void(0)" onclick="contri()">Credits</a>
+      </nav>
     </div>
 
-    <footer>
-      <p>
-        <a href="credits.html"
-          >Made with &#10084; by Programming Domain, TechnoCrats GSV</a
-        >
-      </p>
+    <main class="cx-main">
+      <div id="content" class="cx-card cx-quiz-card" style="display: none">
+        <div class="cx-quiz-head">
+          <span class="cx-section-title">Active Level</span>
+          <h1 id="levelTitle"></h1>
+        </div>
+        <div id="questionText"></div>
+        <img id="imageDisplay" alt="Question Image" />
+        <button id="fileButton" class="cx-btn-small" onclick="openFile()">
+          <i class="fa-solid fa-paperclip"></i> View File
+        </button>
+        <div class="cx-answer-row">
+          <input type="text" id="answerInput" placeholder="Enter your answer" />
+          <button id="submitButton" class="cx-btn-pill" onclick="submitAnswer()">Submit</button>
+        </div>
+      </div>
+
+      <div id="nostart" class="cx-card cx-state-card" style="display: none">
+        <i class="fa-solid fa-hourglass-half cx-state-icon"></i>
+        <h1>Hunt hasn't started yet</h1>
+        <p>Check back later &mdash; the countdown is still running.</p>
+      </div>
+
+      <div id="khatam" class="cx-card cx-state-card" style="display: none">
+        <i class="fa-solid fa-flag-checkered cx-state-icon"></i>
+        <h1>Hunt has ended!</h1>
+        <p>Thanks for playing Cryptonx'26. Check the leaderboard for the final standings.</p>
+      </div>
+
+      <div id="banned" class="cx-card cx-state-card cx-state-card--danger" style="display: none">
+        <i class="fa-solid fa-ban cx-state-icon"></i>
+        <h1>You have been banned from the hunt!</h1>
+        <h3>Contact the organizers on Discord if you think this is a mistake.</h3>
+      </div>
+    </main>
+
+    <div id="modal" class="modal" style="display: none"></div>
+
+    <footer class="cx-footer">
+      <div class="cx-footer-inner">
+        <div class="cx-footer-brand">Cryptonx'26</div>
+        <p class="cx-footer-copy">&copy; 2026 TechnoCrats GSV's Programming Domain. All rights reserved.</p>
+        <div class="cx-footer-links">
+          <a href="register.html">Home</a>
+          <a href="leaderboard.html">Leaderboard</a>
+          <a href="credits.html">Credits</a>
+          <a href="credits.html">Made with &#10084; by Programming Domain, TechnoCrats GSV</a>
+        </div>
+      </div>
     </footer>
 
     <script>
@@ -454,7 +766,7 @@
       function showSuccessModal() {
         const modal = document.getElementById("modal");
         modal.innerText = "Congrats! Right answer.";
-        modal.style.backgroundColor = "#28a745";
+        modal.className = "modal cx-modal--success";
         modal.style.display = "block";
 
         setTimeout(() => {
@@ -465,7 +777,7 @@
       function showErrorModal() {
         const modal = document.getElementById("modal");
         modal.innerText = "Sorry! Wrong answer.";
-        modal.style.backgroundColor = "#dc3545";
+        modal.className = "modal cx-modal--error";
         modal.style.display = "block";
 
         setTimeout(() => {

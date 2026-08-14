@@ -55,7 +55,7 @@
       z-index: 1000;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 32px;
+      padding: 16px 48px;
       background: rgba(13, 15, 14, 0.8);
       box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1), inset -2px -2px 4px rgba(0, 0, 0, 0.4);
       -webkit-backdrop-filter: blur(6px);
@@ -86,8 +86,8 @@
     .cx-brand {
       font-family: 'Sekuya', 'Montserrat', sans-serif;
       font-weight: 400;
-      font-size: 28px;
-      letter-spacing: -1.4px;
+      font-size: 32px;
+      letter-spacing: -1.6px;
       color: var(--cx-red);
     }
 
@@ -114,11 +114,11 @@
     /* Main */
     .cx-main {
       box-sizing: border-box;
-      max-width: 1184px;
+      max-width: 1280px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      padding: 32px 24px 64px;
+      padding: 128px 48px 64px;
       gap: 32px;
     }
 
@@ -298,43 +298,25 @@
       letter-spacing: 0;
     }
 
-    /* Accordion: collapsed by default, expands on tap at any viewport */
-    .cx-card-body {
-      display: none;
-    }
-
-    .cx-learning .cx-card-body {
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .cx-card.is-open .cx-card-body {
-      display: block;
-    }
-
-    .cx-learning.is-open .cx-card-body {
+    /* Card grids (desktop: 2-up, per registerdesign.md) */
+    .cx-grid-2 {
       display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
     }
 
-    .cx-accordion-header {
-      cursor: pointer;
-      justify-content: space-between;
+    .cx-grid-2 .cx-card {
+      flex: 1 1 280px;
+    }
+
+    /* Accordion: always expanded on desktop; collapses on tap only under the mobile
+       breakpoint (see media query below) */
+    .cx-card-body {
+      display: contents;
     }
 
     .cx-accordion-chevron {
-      display: inline-block;
-      margin-left: auto;
-      transition: transform .25s ease;
-    }
-
-    .is-open .cx-accordion-chevron {
-      transform: rotate(180deg);
-    }
-
-    .cx-accordion-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+      display: none;
     }
 
     .cx-card p {
@@ -359,15 +341,39 @@
       color: var(--cx-red);
     }
 
+    .cx-watermark {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 64px;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+
+    /* Divider */
+    .cx-divider {
+      height: 1px;
+      width: 100%;
+      background: linear-gradient(90deg, rgba(208, 74, 58, 0) 0%, rgba(208, 74, 58, 0.3) 50%, rgba(208, 74, 58, 0) 100%);
+    }
+
     /* Rules / Guidelines lists */
     .cx-card--rules h3,
     .cx-card--rules i {
       color: var(--cx-pink);
     }
 
+    .cx-card--rules .cx-watermark {
+      color: var(--cx-pink);
+    }
+
     .cx-card--guidelines h3,
     .cx-card--guidelines i {
       color: var(--cx-gold);
+    }
+
+    .cx-card--guidelines .cx-watermark {
+      color: var(--cx-heading);
     }
 
     .cx-list {
@@ -529,7 +535,7 @@
     .cx-page #profileCard {
       box-sizing: border-box;
       width: 100%;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
@@ -621,18 +627,19 @@
     .cx-page footer.cx-footer {
       background: #080909;
       box-shadow: inset 0px 2px 8px rgba(0, 0, 0, 0.5);
-      padding: 32px 32px 24px;
-      text-align: center;
+      padding: 32px 48px;
       margin-top: 0;
     }
 
     .cx-footer-inner {
-      max-width: 1184px;
+      max-width: 1280px;
       margin: 0 auto;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
-      gap: 12px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
     }
 
     .cx-footer-brand {
@@ -640,6 +647,7 @@
       font-weight: 400;
       font-size: 24px;
       color: var(--cx-heading);
+      flex-shrink: 0;
     }
 
     .cx-footer-copy {
@@ -647,6 +655,7 @@
       font-family: 'Inter', sans-serif;
       font-size: 14px;
       color: var(--cx-gold);
+      text-align: center;
     }
 
     .cx-footer-links {
@@ -654,6 +663,7 @@
       gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
+      flex-shrink: 0;
     }
 
     .cx-footer-links a {
@@ -685,7 +695,58 @@
       }
 
       .cx-main {
-        padding-top: 24px;
+        padding: 96px 20px 48px;
+      }
+
+      .cx-page footer.cx-footer {
+        padding: 32px 20px;
+      }
+
+      .cx-footer-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+      }
+
+      .cx-grid-2 {
+        flex-direction: column;
+      }
+
+      .cx-grid-2 .cx-card {
+        flex: none;
+      }
+
+      /* Accordion cards: collapsed by default on mobile, tap the header to expand */
+      .cx-card-body {
+        display: none;
+      }
+
+      .cx-learning .cx-card-body {
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .cx-card.is-open .cx-card-body {
+        display: block;
+      }
+
+      .cx-learning.is-open .cx-card-body {
+        display: flex;
+      }
+
+      .cx-accordion-header {
+        cursor: pointer;
+        justify-content: space-between;
+      }
+
+      .cx-accordion-chevron {
+        display: inline-block;
+        margin-left: auto;
+        transition: transform .25s ease;
+      }
+
+      .is-open .cx-accordion-chevron {
+        transform: rotate(180deg);
       }
 
       .cx-hero {
@@ -779,7 +840,7 @@
       </div>
     </div>
 
-    <section class="cx-accordion-list">
+    <section class="cx-grid-2">
       <div class="cx-card cx-card--about">
         <h3 class="cx-accordion-header" onclick="cxToggleAccordion(this)"><i class="fa-solid fa-circle-info"></i> About The Event <i class="fa-solid fa-chevron-down cx-accordion-chevron"></i></h3>
         <div class="cx-card-body">
@@ -801,7 +862,13 @@
           </p>
         </div>
       </div>
-      <div class="cx-card cx-card--rules" id="rules-section">
+    </section>
+
+    <div class="cx-divider"></div>
+
+    <section id="rules-section" class="cx-grid-2">
+      <div class="cx-card cx-card--rules">
+        <i class="fa-solid fa-gavel cx-watermark"></i>
         <h3 class="cx-accordion-header" onclick="cxToggleAccordion(this)"><i class="fa-solid fa-shield-halved"></i> Rules of Engagement <i class="fa-solid fa-chevron-down cx-accordion-chevron"></i></h3>
         <div class="cx-card-body">
           <ul class="cx-list">
@@ -819,6 +886,7 @@
         </div>
       </div>
       <div class="cx-card cx-card--guidelines">
+        <i class="fa-solid fa-list-check cx-watermark"></i>
         <h3 class="cx-accordion-header" onclick="cxToggleAccordion(this)"><i class="fa-solid fa-list-check"></i> Operational Guidelines <i class="fa-solid fa-chevron-down cx-accordion-chevron"></i></h3>
         <div class="cx-card-body">
           <ul class="cx-list">
@@ -837,7 +905,11 @@
           </ul>
         </div>
       </div>
-      <div class="cx-learning">
+    </section>
+
+    <div class="cx-divider"></div>
+
+    <section class="cx-learning">
       <h3 class="cx-section-title cx-accordion-header" onclick="cxToggleAccordion(this)">Learning Resources &amp; Tactics <i class="fa-solid fa-chevron-down cx-accordion-chevron"></i></h3>
       <div class="cx-card-body">
       <div class="cx-card cx-learning-intro">
@@ -891,7 +963,6 @@
         </div>
       </div>
       </div>
-      </div>
     </section>
   </main>
 
@@ -935,6 +1006,7 @@
       const profilePointsElement = document.getElementById('userPoints');
       document.getElementById('signInButton').style.display = 'none';
       document.getElementById('intro').style.display = 'none';
+      document.getElementById('profileCard').style.display = 'flex';
 
       if (user.photoURL) {
         profilePhotoElement.src = user.photoURL;
@@ -1027,6 +1099,7 @@
       document.getElementById('play').style.display = 'none';
       document.getElementById('profilePhoto').style.display = 'none';
       document.getElementById('userInfo').style.display = 'none';
+      document.getElementById('profileCard').style.display = 'none';
       document.getElementById('profileCard').style.justifyContent = 'center';
     }
 
