@@ -264,16 +264,8 @@
       flex-shrink: 0;
     }
 
-    /* Card grids */
-    .cx-grid-2 {
-      display: flex;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-
     .cx-card {
       box-sizing: border-box;
-      flex: 1 1 280px;
       display: flex;
       flex-direction: column;
       gap: 24px;
@@ -306,13 +298,43 @@
       letter-spacing: 0;
     }
 
-    /* Accordion (mobile only — see media query below; inert on desktop) */
+    /* Accordion: collapsed by default, expands on tap at any viewport */
     .cx-card-body {
-      display: contents;
+      display: none;
+    }
+
+    .cx-learning .cx-card-body {
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .cx-card.is-open .cx-card-body {
+      display: block;
+    }
+
+    .cx-learning.is-open .cx-card-body {
+      display: flex;
+    }
+
+    .cx-accordion-header {
+      cursor: pointer;
+      justify-content: space-between;
     }
 
     .cx-accordion-chevron {
-      display: none;
+      display: inline-block;
+      margin-left: auto;
+      transition: transform .25s ease;
+    }
+
+    .is-open .cx-accordion-chevron {
+      transform: rotate(180deg);
+    }
+
+    .cx-accordion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
     .cx-card p {
@@ -337,39 +359,15 @@
       color: var(--cx-red);
     }
 
-    .cx-watermark {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      font-size: 64px;
-      opacity: 0.05;
-      pointer-events: none;
-    }
-
-    /* Divider */
-    .cx-divider {
-      height: 1px;
-      width: 100%;
-      background: linear-gradient(90deg, rgba(208, 74, 58, 0) 0%, rgba(208, 74, 58, 0.3) 50%, rgba(208, 74, 58, 0) 100%);
-    }
-
     /* Rules / Guidelines lists */
     .cx-card--rules h3,
     .cx-card--rules i {
       color: var(--cx-pink);
     }
 
-    .cx-card--rules .cx-watermark {
-      color: var(--cx-pink);
-    }
-
     .cx-card--guidelines h3,
     .cx-card--guidelines i {
       color: var(--cx-gold);
-    }
-
-    .cx-card--guidelines .cx-watermark {
-      color: var(--cx-heading);
     }
 
     .cx-list {
@@ -724,39 +722,6 @@
         justify-content: center;
       }
 
-      /* Accordion cards: collapsed by default, tap the header to expand */
-      .cx-card-body {
-        display: none;
-      }
-
-      .cx-learning .cx-card-body {
-        flex-direction: column;
-        gap: 32px;
-      }
-
-      .cx-card.is-open .cx-card-body {
-        display: block;
-      }
-
-      .cx-learning.is-open .cx-card-body {
-        display: flex;
-      }
-
-      .cx-accordion-header {
-        cursor: pointer;
-        justify-content: space-between;
-      }
-
-      .cx-accordion-chevron {
-        display: inline-block;
-        margin-left: auto;
-        transition: transform .25s ease;
-      }
-
-      .is-open .cx-accordion-chevron {
-        transform: rotate(180deg);
-      }
-
       .cx-page #profileCard {
         justify-content: center;
         text-align: center;
@@ -798,7 +763,23 @@
       </div>
     </div>
 
-    <section class="cx-grid-2">
+    <div id="profileCard">
+      <div id="profilePhoto">
+        <img src="" alt="User Profile">
+      </div>
+      <div id="userInfo">
+        <div id="userName"></div>
+        <div id="userEmail"></div>
+        <div id="userPoints"></div>
+      </div>
+      <div class="cx-profile-actions">
+        <button id="signOutButton" class="cx-btn-small">Sign Out</button>
+        <button id="toggleHideButton" class="cx-btn-small" onclick="toggleHide()">Hide</button>
+        <button id="play" class="cx-btn-small cx-btn-small--primary" onclick="play()">Play</button>
+      </div>
+    </div>
+
+    <section class="cx-accordion-list">
       <div class="cx-card cx-card--about">
         <h3 class="cx-accordion-header" onclick="cxToggleAccordion(this)"><i class="fa-solid fa-circle-info"></i> About The Event <i class="fa-solid fa-chevron-down cx-accordion-chevron"></i></h3>
         <div class="cx-card-body">
@@ -820,13 +801,7 @@
           </p>
         </div>
       </div>
-    </section>
-
-    <div class="cx-divider"></div>
-
-    <section id="rules-section" class="cx-grid-2">
-      <div class="cx-card cx-card--rules">
-        <i class="fa-solid fa-gavel cx-watermark"></i>
+      <div class="cx-card cx-card--rules" id="rules-section">
         <h3 class="cx-accordion-header" onclick="cxToggleAccordion(this)"><i class="fa-solid fa-shield-halved"></i> Rules of Engagement <i class="fa-solid fa-chevron-down cx-accordion-chevron"></i></h3>
         <div class="cx-card-body">
           <ul class="cx-list">
@@ -844,7 +819,6 @@
         </div>
       </div>
       <div class="cx-card cx-card--guidelines">
-        <i class="fa-solid fa-list-check cx-watermark"></i>
         <h3 class="cx-accordion-header" onclick="cxToggleAccordion(this)"><i class="fa-solid fa-list-check"></i> Operational Guidelines <i class="fa-solid fa-chevron-down cx-accordion-chevron"></i></h3>
         <div class="cx-card-body">
           <ul class="cx-list">
@@ -863,11 +837,7 @@
           </ul>
         </div>
       </div>
-    </section>
-
-    <div class="cx-divider"></div>
-
-    <section class="cx-learning">
+      <div class="cx-learning">
       <h3 class="cx-section-title cx-accordion-header" onclick="cxToggleAccordion(this)">Learning Resources &amp; Tactics <i class="fa-solid fa-chevron-down cx-accordion-chevron"></i></h3>
       <div class="cx-card-body">
       <div class="cx-card cx-learning-intro">
@@ -919,6 +889,7 @@
             <li>- imgflip.com</li>
           </ul>
         </div>
+      </div>
       </div>
       </div>
     </section>
