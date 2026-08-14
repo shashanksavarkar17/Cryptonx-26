@@ -2,51 +2,596 @@
 <html lang="en">
 
 <head>
-    <title>Leaderboard</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="https://i.ibb.co/YtmNbTq/transparent-logo.png">
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="style.css">
+  <title>Cryptonx'26 - Leaderboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="public/images/technocrats-gsv-logo.svg">
+  <link rel="icon" type="image/webp" href="public/images/technocrats-gsv-logo.webp">
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sekuya&family=Montserrat:wght@400;700;800&family=Inter:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+    :root {
+      --cx-bg: #0D0F0E;
+      --cx-card: #151816;
+      --cx-card-border: rgba(184, 148, 82, 0.1);
+      --cx-heading: #F1EEE6;
+      --cx-body: #C9C6BF;
+      --cx-muted: #634F2B;
+      --cx-red: #D04A3A;
+      --cx-gold: #B89452;
+      --cx-pink: #FFB4AB;
+      --cx-danger: #EF4444;
+      --cx-green: #10B981;
+      --cx-silver: #C0C0C0;
+      --cx-bronze: #CD7F32;
+      --cx-card-shadow: 8px 8px 16px rgba(0, 0, 0, 0.8), inset 2px 2px 4px 1px rgba(255, 255, 255, 0.02), inset -2px -2px 4px 1px rgba(0, 0, 0, 0.4);
+      --cx-btn-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6), inset 2px 2px 4px rgba(255, 255, 255, 0.1), inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+      --cx-pill-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4), inset 1px 1px 2px 1px rgba(255, 255, 255, 0.05);
+    }
+
+    body.cx-page {
+      background-color: var(--cx-bg);
+      background-image:
+        repeating-linear-gradient(0deg, rgba(208, 74, 58, 0.05) 0px, rgba(208, 74, 58, 0.05) 1px, transparent 1px, transparent 40px),
+        repeating-linear-gradient(90deg, rgba(208, 74, 58, 0.05) 0px, rgba(208, 74, 58, 0.05) 1px, transparent 1px, transparent 40px);
+      color: var(--cx-body);
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Header (same as register.html) */
+    .cx-page #navbar {
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      box-sizing: border-box;
+      z-index: 1000;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(13, 15, 14, 0.8);
+      box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1), inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+    }
+
+    .cx-logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cx-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #FFF;
+      flex-shrink: 0;
+    }
+
+    .cx-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .cx-brand {
+      font-family: 'Sekuya', 'Montserrat', sans-serif;
+      font-weight: 400;
+      font-size: 28px;
+      letter-spacing: -1.4px;
+      color: var(--cx-red);
+    }
+
+    .cx-nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .cx-nav a {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: var(--cx-body);
+      text-decoration: none;
+      transition: color .2s linear;
+    }
+
+    .cx-nav a:hover {
+      color: var(--cx-red);
+    }
+
+    /* Main */
+    .cx-main {
+      box-sizing: border-box;
+      max-width: 1184px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      padding: 32px 24px 64px;
+      gap: 32px;
+    }
+
+    /* Shared card component */
+    .cx-card {
+      box-sizing: border-box;
+      padding: 32px;
+      background: var(--cx-card);
+      border: 1px solid var(--cx-card-border);
+      box-shadow: var(--cx-card-shadow);
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cx-section-title {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 2.1px;
+      text-transform: uppercase;
+      color: var(--cx-gold);
+    }
+
+    .cx-btn-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 32px;
+      background: #0D0F0E;
+      box-shadow: var(--cx-btn-shadow);
+      border-radius: 24px;
+      border: none;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.6px;
+      color: var(--cx-red);
+      text-transform: uppercase;
+      transition: transform .15s ease;
+    }
+
+    .cx-btn-pill:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Leaderboard header */
+    .cx-lb-header {
+      text-align: left;
+    }
+
+    .cx-lb-title {
+      margin: 0 0 8px;
+      font-family: 'Sekuya', 'Montserrat', sans-serif;
+      font-weight: 400;
+      font-size: clamp(32px, 5vw, 56px);
+      letter-spacing: -2px;
+      color: var(--cx-red);
+    }
+
+    .cx-lb-subtitle {
+      margin: 0;
+      max-width: 640px;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--cx-body);
+    }
+
+    /* Bento grid */
+    .cx-lb-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .cx-lb-table-card {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .cx-lb-table-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--cx-card-border);
+    }
+
+    .cx-lb-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--cx-red);
+    }
+
+    .cx-lb-live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cx-red);
+      animation: cx-pulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes cx-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .35; }
+    }
+
+    .cx-lb-table-wrap {
+      overflow-x: auto;
+    }
+
+    .cx-page .cx-lb-table-wrap table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .cx-page .cx-lb-table-wrap th {
+      background: transparent;
+      text-align: left;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--cx-gold);
+      padding: 0 12px 12px;
+      border-bottom: 1px solid var(--cx-card-border);
+    }
+
+    .cx-page .cx-lb-table-wrap th:first-child {
+      text-align: center;
+      width: 64px;
+    }
+
+    .cx-page .cx-lb-table-wrap th:last-child {
+      text-align: right;
+    }
+
+    .cx-page .cx-lb-table-wrap td {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--cx-card-border);
+      font-family: 'Inter', sans-serif;
+      color: var(--cx-heading);
+    }
+
+    .cx-page .cx-lb-table-wrap td:first-child {
+      text-align: center;
+      color: var(--cx-body);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .cx-page .cx-lb-table-wrap td:last-child {
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--cx-red);
+    }
+
+    .cx-page .cx-lb-table-wrap tr:hover td {
+      background: rgba(184, 148, 82, 0.04);
+    }
+
+    /* Organizers row (2nd row) */
+    .cx-page .cx-lb-table-wrap tr:nth-child(2) td {
+      color: var(--cx-gold);
+      font-weight: 700;
+      letter-spacing: .5px;
+    }
+
+    /* Top 3 (rows 3-5) */
+    .cx-page .cx-lb-table-wrap tr:nth-child(3) td:first-child {
+      color: var(--cx-gold);
+      font-size: 20px;
+      font-weight: 800;
+      text-shadow: 0 0 10px rgba(184, 148, 82, .5);
+    }
+
+    .cx-page .cx-lb-table-wrap tr:nth-child(4) td:first-child {
+      color: var(--cx-silver);
+      font-size: 18px;
+      font-weight: 800;
+      text-shadow: 0 0 10px rgba(192, 192, 192, .4);
+    }
+
+    .cx-page .cx-lb-table-wrap tr:nth-child(5) td:first-child {
+      color: var(--cx-bronze);
+      font-size: 17px;
+      font-weight: 800;
+      text-shadow: 0 0 10px rgba(205, 127, 50, .4);
+    }
+
+    /* Side panel */
+    .cx-lb-side {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .cx-lb-standing {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+    }
+
+    .cx-lb-standing-hint {
+      margin: 0;
+      font-size: 14px;
+      color: var(--cx-body);
+    }
+
+    .cx-lb-standing-rank {
+      font-family: 'Sekuya', 'Montserrat', sans-serif;
+      font-size: 28px;
+      color: var(--cx-heading);
+    }
+
+    .cx-lb-standing-points {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: var(--cx-red);
+    }
+
+    .cx-lb-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .cx-lb-stat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--cx-card-border);
+      font-size: 14px;
+      color: var(--cx-body);
+    }
+
+    .cx-lb-stat-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .cx-lb-stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--cx-red);
+    }
+
+    /* Footer (same as register.html) */
+    .cx-page footer.cx-footer {
+      background: #080909;
+      box-shadow: inset 0px 2px 8px rgba(0, 0, 0, 0.5);
+      padding: 32px 32px 24px;
+      text-align: center;
+      margin-top: 0;
+    }
+
+    .cx-footer-inner {
+      max-width: 1184px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cx-footer-brand {
+      font-family: 'Sekuya', 'Montserrat', sans-serif;
+      font-weight: 400;
+      font-size: 24px;
+      color: var(--cx-heading);
+    }
+
+    .cx-footer-copy {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--cx-gold);
+    }
+
+    .cx-footer-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .cx-footer-links a {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--cx-gold);
+      text-decoration: none;
+    }
+
+    .cx-footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    @media only screen and (max-width: 900px) {
+      .cx-lb-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media only screen and (max-width: 700px) {
+      .cx-page #navbar {
+        padding: 12px 16px;
+      }
+
+      .cx-brand {
+        font-size: 20px;
+      }
+
+      .cx-nav {
+        gap: 14px;
+      }
+
+      .cx-nav a {
+        font-size: 14px;
+      }
+
+      .cx-main {
+        padding-top: 24px;
+      }
+
+      .cx-lb-header {
+        text-align: center;
+      }
+
+      .cx-lb-subtitle {
+        margin: 0 auto;
+      }
+
+      .cx-card {
+        padding: 20px;
+      }
+
+      .cx-lb-table-head {
+        padding-bottom: 12px;
+      }
+
+      .cx-page .cx-lb-table-wrap th {
+        font-size: 10px;
+        padding: 0 8px 10px;
+      }
+
+      .cx-page .cx-lb-table-wrap th:first-child {
+        width: 34px;
+      }
+
+      .cx-page .cx-lb-table-wrap th:last-child,
+      .cx-page .cx-lb-table-wrap td:last-child {
+        width: 64px;
+      }
+
+      .cx-page .cx-lb-table-wrap td {
+        padding: 10px 8px;
+        font-size: 14px;
+        line-height: 1.3;
+      }
+
+      .cx-page .cx-lb-table-wrap tr:nth-child(3) td:first-child {
+        font-size: 17px;
+      }
+
+      .cx-page .cx-lb-table-wrap tr:nth-child(4) td:first-child {
+        font-size: 16px;
+      }
+
+      .cx-page .cx-lb-table-wrap tr:nth-child(5) td:first-child {
+        font-size: 15px;
+      }
+
+      .cx-lb-standing .cx-btn-pill {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
-<body>
-    <div id="navbar">
-        <div id="logo-container">
-            <div id="logo">
-                <img src="https://i.ibb.co/7d1wCVHj/Cipher-Saga-Techno-Logo.png" alt="Cipher-Saga-Techno-Logo" border="0">
+<body class="cx-page">
+  <div id="navbar">
+    <div class="cx-logo-container">
+      <div class="cx-brand">Cryptonx'26</div>
+    </div>
+    <nav class="cx-nav">
+      <a href="javascript:void(0)" onclick="home()">Home</a>
+      <a href="javascript:void(0)" onclick="play()">Play</a>
+      <a href="javascript:void(0)" onclick="contri()">Credits</a>
+    </nav>
+  </div>
+
+  <main class="cx-main" id="content">
+    <header class="cx-lb-header">
+      <h1 class="cx-lb-title">Global Standings</h1>
+      <p class="cx-lb-subtitle">
+        Real-time tracking of participant performance. Points update the moment a correct answer is submitted —
+        climb the ranks by clearing levels.
+      </p>
+    </header>
+
+    <div class="cx-lb-grid">
+      <div class="cx-card cx-lb-table-card">
+        <div class="cx-lb-table-head">
+          <h2 class="cx-section-title" style="color:var(--cx-red);">Active Leaderboard</h2>
+          <span class="cx-lb-live"><span class="cx-lb-live-dot"></span>LIVE</span>
+        </div>
+        <div class="cx-lb-table-wrap">
+          <table>
+            <tr>
+              <th>Rank</th>
+              <th>User</th>
+              <th>Points</th>
+            </tr>
+            <tr>
+              <td><i class="fa-solid fa-infinity"></i></td>
+              <td>ORGANIZERS</td>
+              <td><i class="fa-solid fa-infinity"></i></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="cx-lb-side">
+        <div class="cx-card">
+          <h3 class="cx-section-title" style="margin-bottom:16px;">Your Standing</h3>
+          <div id="lbYourStanding" class="cx-lb-standing">
+            <p class="cx-lb-standing-hint">Sign in to see your personal rank and points.</p>
+            <button class="cx-btn-pill" onclick="home()"><i class="fa-brands fa-google"></i> Sign In to Sync</button>
+          </div>
+        </div>
+        <div class="cx-card">
+          <h3 class="cx-section-title" style="margin-bottom:16px;">Event Status</h3>
+          <div class="cx-lb-stats">
+            <div class="cx-lb-stat-row">
+              <span>Registered Participants</span>
+              <span id="lbParticipantCount" class="cx-lb-stat-value">—</span>
             </div>
-            <div id="name">Cipher Saga <i> Freshers Edition</i></div>
+            <div class="cx-lb-stat-row">
+              <span>Hunt Ends In</span>
+              <span id="lbCountdown" class="cx-lb-stat-value">—</span>
+            </div>
+          </div>
         </div>
-        <div id="navbar-buttons">
-            <button onclick="play()"><i class="fa-solid fa-play"></i></button>
-            <button onclick="home()"><i class="fa-solid fa-house"></i></button>
-            <button onclick="contri()"><i class="fa-solid fa-users-gear"></i></button>
-        </div>
+      </div>
     </div>
-    <div id="content">
-        <table>
-            <tr>
-                <th>Rank</th>
-                <th>User</th>
-                <th>Points</th>
-            </tr>
-            <tr>
-                <td><i class="fa-solid fa-infinity"></i></td>
-                <td>ORGANIZERS</td>
-                <td><i class="fa-solid fa-infinity"></i></td>
-            </tr>
-        </table>
+  </main>
+
+  <footer class="cx-footer">
+    <div class="cx-footer-inner">
+      <div class="cx-footer-brand">Cryptonx'26</div>
+      <p class="cx-footer-copy">&copy; 2026 TechnoCrats GSV's Programming Domain. All rights reserved.</p>
+      <div class="cx-footer-links">
+        <a href="index.html">Play</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="credits.html">Credits</a>
+        <a href="credits.html">Made with &#10084; by Programming Domain, TechnoCrats GSV</a>
+      </div>
     </div>
-    <footer>
-        <p><a href="credits.html">Made with &#10084; by Programming
-                Domain, TechnoCrats GSV</a></p>
-    </footer>
+  </footer>
     <script>
           const firebaseConfig = {
     apiKey: "AIzaSyDhCvHuJoiNca1Wa3oda5DWNhk724gDGKQ",
@@ -120,6 +665,63 @@
             window.location.href = 'credits.html';
         }
     </script>
+  <script>
+    // Sidebar widgets: live countdown to the real hunt end date, real participant count,
+    // and the signed-in user's real rank/points. Independent of the script above —
+    // reuses the already-initialized Firebase app, doesn't touch its logic.
+    (function () {
+      var endDate = new Date(2026, 8, 20, 12, 0, 0);
+      var countdownEl = document.getElementById('lbCountdown');
+
+      function pad(n) { return String(n).padStart(2, '0'); }
+
+      function tick() {
+        var diff = endDate.getTime() - Date.now();
+        if (diff <= 0) {
+          countdownEl.textContent = 'Ended';
+          return;
+        }
+        var h = Math.floor(diff / 3600000);
+        var m = Math.floor((diff % 3600000) / 60000);
+        var s = Math.floor((diff % 60000) / 1000);
+        countdownEl.textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+      }
+      tick();
+      setInterval(tick, 1000);
+
+      var statsRef = firebase.database().ref('users');
+      statsRef.once('value').then(function (snapshot) {
+        var participantCountEl = document.getElementById('lbParticipantCount');
+        if (!snapshot.exists()) {
+          participantCountEl.textContent = '0';
+          return;
+        }
+        var users = Object.entries(snapshot.val());
+        participantCountEl.textContent = users.length;
+
+        users.sort(function (a, b) {
+          if (b[1].points !== a[1].points) {
+            return b[1].points - a[1].points;
+          } else {
+            return a[1].latest - b[1].latest;
+          }
+        });
+
+        firebase.auth().onAuthStateChanged(function (user) {
+          if (!user) return;
+          var idx = users.findIndex(function (u) { return u[0] === user.uid; });
+          if (idx === -1) return;
+          var points = users[idx][1].points || 0;
+          var box = document.getElementById('lbYourStanding');
+          box.innerHTML =
+            '<div class="cx-lb-standing-rank">Rank #' + (idx + 1) + '</div>' +
+            '<div class="cx-lb-standing-points">' + points + ' pts</div>';
+        });
+      }).catch(function (error) {
+        console.error('Error loading sidebar stats:', error);
+      });
+    })();
+  </script>
 </body>
 
 </html>
