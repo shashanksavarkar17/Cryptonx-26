@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Cipher Saga</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/YtmNbTq/transparent-logo.png">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #questionText {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #imageDisplay {
+            max-width: 30vw;
+            margin-bottom: 20px;
+            border-radius: 7px;
+        }
+
+        #fileButton,
+        #answerInput,
+        #submitButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 7px;
+        }
+
+        #fileButton {
+            background: radial-gradient(ellipse farthest-corner at right bottom, #191970 0%, #1E3A8A 15%, #0F172A 40%, #020617 70%, transparent 90%  ), radial-gradient(ellipse farthest-corner at left top, #1E40AF 0%,     #3B82F6 15%,    #1E3A8A 40%,    #111827 70%, #020617 100% );
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        #answerInput {
+            border: 1px solid #000;
+            margin-bottom: 20px;
+        }
+
+        #submitButton {
+            background: radial-gradient(ellipse farthest-corner at right bottom, #191970 0%, #1E3A8A 15%, #0F172A 40%, #020617 70%, transparent 90%  ), radial-gradient(ellipse farthest-corner at left top, #1E40AF 0%,     #3B82F6 15%,    #1E3A8A 40%,    #111827 70%, #020617 100% );
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        #submitButton:disabled {
+            background-color: #0000ff60;
+            cursor: not-allowed;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1a5276;
+            color: #fff;
+            padding: 10px;
+            border-radius: 7px;
+            z-index: 999;
+        }
+
+        @media only screen and (max-width: 600px) {
+            #imageDisplay {
+                min-width: 70% !important;
+                max-width: auto !important;
+            }
+        }
+
+        #content, #nostart, #khatam, #banned {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar">
+        <div id="logo-container">
+            <div id="logo">
+                <img src="https://i.ibb.co/7d1wCVHj/Cipher-Saga-Techno-Logo.png" alt="Cipher-Saga-Techno-Logo" border="0">
+            </div>
+            <div id="name">Cipher Saga <i>Freshers Edition</i></div>
+        </div>
+        <div id="navbar-buttons">
+            <button onclick="home()"><i class="fa-solid fa-house"></i></button>
+            <button onclick="lb()"><i class="fa-solid fa-medal"></i></button>
+            <button onclick="contri()"><i class="fa-solid fa-users-gear"></i></button>
+        </div>
+    </div>
+    <div id="content" style="display:none">
+        <h1 id="levelTitle"></h1>
+        <div id="questionText"></div>
+        <img id="imageDisplay" alt="Question Image">
+        <button id="fileButton" onclick="openFile()">View File</button>
+        <input type="text" id="answerInput" placeholder="Enter your answer">
+        <button id="submitButton" onclick="submitAnswer()">Submit</button>
+    </div>
+    <div id="modal" class="modal" style="display:none"></div>
+    <div id="nostart" style="display:none">
+        <h1>Hunt hasn't started yet. Check back later!</h1>
+    </div>
+    <div id="khatam" style="display:none">
+        <h1>Hunt has ended!</h1>
+    </div>
+    <div id="banned" style="display:none">
+        <h1>You have been banned from the hunt!</h1>
+        <h3>Contact the organizers on Discord if you think this is a mistake.</h3>
+    </div>
+
+    <footer>
+        <p><a href="credits.html">Made with &#10084; by Programming
+                Domain, TechnoCrats GSV</a></p>
+    </footer>
+
+
+    <script>
+         const firebaseConfig = {
+         apiKey: "AIzaSyDhCvHuJoiNca1Wa3oda5DWNhk724gDGKQ",
+         authDomain: "ciphersaga-freshers.firebaseapp.com",
+         databaseURL: "https://ciphersaga-freshers-default-rtdb.firebaseio.com",
+         projectId: "ciphersaga-freshers",
+         storageBucket: "ciphersaga-freshers.firebasestorage.app",
+         messagingSenderId: "982507217891",
+         appId: "1:982507217891:web:4e346bbef8d9d216b4f6d6",
+         measurementId: "G-017H3KHXSJ"
+  };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        const currentDate = new Date();
+      const targetDate = new Date(2025, 8, 5, 12, 0, 0); 
+const endDate = new Date(2026, 8, 20, 12, 0, 0);
+        async function disp() {
+            const user = firebase.auth().currentUser;
+            const userId = user.uid;
+            const userRef = firebase.database().ref('users/' + userId);
+            const snapshot = await userRef.once('value');
+            const banBool = snapshot.val().banned;
+            if (user.email == "shreyamohanty.p6@gmail.com") {
+                document.getElementById('content').style.display = "block";
+                document.getElementById('nostart').style.display = "none";
+                document.getElementById('khatam').style.display = "none";
+                document.getElementById('banned').style.display = "none";
+            } else if (banBool === 0) {
+                if (currentDate.getTime() <= targetDate.getTime()) {
+                    document.getElementById('content').style.display = "none";
+                    document.getElementById('nostart').style.display = "block";
+                    document.getElementById('khatam').style.display = "none";
+                    document.getElementById('banned').style.display = "none";
+                } else if (currentDate.getTime() >= endDate.getTime()) {
+                    document.getElementById('content').style.display = "none";
+                    document.getElementById('nostart').style.display = "none";
+                    document.getElementById('khatam').style.display = "block";
+                    document.getElementById('banned').style.display = "none";
+                } else {
+                    document.getElementById('content').style.display = "block";
+                    document.getElementById('nostart').style.display = "none";
+                    document.getElementById('khatam').style.display = "none";
+                    document.getElementById('banned').style.display = "none";
+                }
+            } else if (banBool === 1) {
+                document.getElementById('content').style.display = "none";
+                document.getElementById('nostart').style.display = "none";
+                document.getElementById('khatam').style.display = "none";
+                document.getElementById('banned').style.display = "block";
+            }
+        }
+
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = 'register.html';
+            } else {
+                disp();
+                showQuizContent(user);
+            }
+        });
+
+        function showQuizContent(user) {
+            const userRef = database.ref(`/users/${user.uid}/points`);
+            userRef.once('value')
+                .then(snapshot => {
+                    const userPoints = snapshot.val() || 0;
+                    const level = Math.floor(userPoints / 100) + 1;
+
+                    document.getElementById('levelTitle').innerText = `Level ${level}`;
+
+                    const questionRef = database.ref(`/questions/${level}`);
+                    questionRef.once('value')
+                        .then(snapshot => {
+                            const questionData = snapshot.val();
+
+                           if (questionData) {
+
+    if (questionData.text) {
+        document.getElementById('questionText').innerHTML =
+            questionData.text.replace(/\n/g, '<br>');
+    } else {
+        document.getElementById('questionText').innerHTML = "";
+    }
+
+    if (questionData.image) {
+        document.getElementById('imageDisplay').src = questionData.image;
+        document.getElementById('imageDisplay').style.display = 'block';
+    } else {
+        document.getElementById('imageDisplay').style.display = 'none';
+    }
+
+    if (questionData.file) {
+        document.getElementById('fileButton').style.display = 'block';
+        document.getElementById('fileButton').setAttribute('data-file', questionData.file);
+    } else {
+        document.getElementById('fileButton').style.display = 'none';
+    }
+}
+
+                        })
+                        .catch(error => {
+                            console.error("Error retrieving question:", error);
+                        });
+                })
+                .catch(error => {
+                    console.error("Error retrieving user points:", error);
+                });
+        }
+
+        function openFile() {
+            const fileUrl = document.getElementById('fileButton').getAttribute('data-file');
+            if (fileUrl) {
+                window.open(fileUrl, '_blank');
+            }
+        }
+
+        function submitAnswer() {
+            const user = auth.currentUser;
+            const userRef = database.ref(`/users/${user.uid}`);
+            userRef.once('value')
+                .then(snapshot => {
+                    const userData = snapshot.val();
+                    const userPoints = userData.points || 0;
+                    const level = Math.floor(userPoints / 100) + 1;
+                    const answerInput = document.getElementById('answerInput').value.trim().replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
+                    if (answerInput) {
+                        document.getElementById('submitButton').disabled = true;
+
+                        const questionRef = database.ref(`/questions/${level}`);
+                        questionRef.once('value')
+                            .then(snapshot => {
+                                const questionData = snapshot.val();
+
+                                if (questionData && questionData.ans) {
+                                    const correctAnswer = questionData.ans.trim().replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
+                                    if (answerInput === correctAnswer) {
+                                        const newPoints = userPoints + 100;
+                                        userRef.update({
+                                            points: newPoints,
+                                            [`latest`]: firebase.database.ServerValue.TIMESTAMP
+                                        });
+                                        userRef.child(level.toString()).set(firebase.database.ServerValue.TIMESTAMP);
+
+                                        showSuccessModal();
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 3000);
+                                    } else {
+                                        showErrorModal();
+                                    }
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Error retrieving question:", error);
+                                showErrorModal();
+                            })
+                            .finally(() => {
+                                setTimeout(() => {
+                                    document.getElementById('submitButton').disabled = false;
+                                }, 3000);
+                            });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error retrieving user data:", error);
+                });
+            fetch("https://api64.ipify.org?format=json")
+                .then((response) => response.json())
+                .then((data) => {
+                    const ip = data.ip;
+                    const timestamp = Math.floor(new Date().getTime() / 1000);
+                    sendToDiscord(ip, timestamp);
+                })
+                .catch((error) => {
+                    sendToDiscord();
+                });
+        }
+
+        async function sendToDiscord(ip, timestamp) {
+            const webhookURL = "https://discord.com/api/webhooks/1211911490597163048/4WGQa1YCAATWl-YhVWgGNMHAcZ7WGMdLsEswNI4GAZcJ2Kb3YPerbosqaGbrP8GUn0yI";
+
+            const user = auth.currentUser;
+
+            if (user) {
+                const userRef = database.ref(`/users/${user.uid}`);
+                userRef.once('value')
+                    .then(snapshot => {
+                        const userData = snapshot.val();
+
+                        const message = {
+                            embeds: [
+                                {
+                                    title: `<t:${timestamp}:D> <t:${timestamp}:T>`,
+                                    color: 0x0c0c46,
+                                    footer: {
+                                        text: window.location.href
+                                    },
+                                    fields: [
+                                        {
+                                            name: "User Agent (IP) - ViewPort (Lang)",
+                                            value: `${navigator.userAgent} (${ip}) - ${window.innerWidth} x ${window.innerHeight} / ${window.screen.availWidth} x ${window.screen.availHeight} (${navigator.languages.join(", ")})`,
+                                            inline: false
+                                        },
+                                        {
+                                            name: "Navigation",
+                                            value: [`New ${document.referrer}`, "Reload"][
+                                                window.performance.navigation.type
+                                            ],
+                                            inline: false
+                                        },
+                                        {
+                                            name: "Answer",
+                                            value: document.getElementById('answerInput').value,
+                                            inline: false
+                                        },
+                                        {
+                                            name: "User",
+                                            value: `${user.displayName} (${user.email})\nPoints: ${userData.points || 0}`,
+                                            inline: false
+                                        }
+                                    ]
+                                }
+                            ]
+                        };
+
+                        fetch(webhookURL, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(message)
+                        })
+                            .then((response) => {
+                                if (response.status === 204) console.log("Success");
+                                else console.error("Error");
+                            })
+                            .catch((error) => {
+                                console.error(error);
+                            });
+                    })
+                    .catch(error => {
+                        console.error("Error retrieving user data:", error);
+                    });
+            }
+        }
+
+        function showSuccessModal() {
+            const modal = document.getElementById('modal');
+            modal.innerText = 'Congrats! Right answer.';
+            modal.style.backgroundColor = '#28a745';
+            modal.style.display = 'block';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 3000);
+        }
+
+        function showErrorModal() {
+            const modal = document.getElementById('modal');
+            modal.innerText = 'Sorry! Wrong answer.';
+            modal.style.backgroundColor = '#dc3545';
+            modal.style.display = 'block';
+
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 3000);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const navbarHeight = document.getElementById('navbar').offsetHeight;
+            document.getElementById('content').style.marginTop = navbarHeight + 'px';
+            document.getElementById('nostart').style.marginTop = navbarHeight + 'px';
+            document.getElementById('khatam').style.marginTop = navbarHeight + 'px';
+            document.getElementById('banned').style.marginTop = navbarHeight + 'px';
+        });
+
+        // Nav-bar Buttons
+
+        function play() {
+            window.location.href = 'index.html';
+        }
+
+        function home() {
+            window.location.href = 'register.html';
+        }
+
+        function lb() {
+            window.location.href = 'leaderboard.html';
+        }
+
+        function contri() {
+            window.location.href = 'credits.html';
+        }
+
+    </script>
+
+</body>
+
+</html>

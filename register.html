@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Home</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="https://i.ibb.co/YtmNbTq/transparent-logo.png">
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    #profileCard {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      box-sizing: border-box;
+      background: radial-gradient(ellipse farthest-corner at right bottom, #191970 0%, #1E3A8A 15%, #0F172A 40%, #020617 70%, transparent 90%  ), radial-gradient(ellipse farthest-corner at left top, #1E40AF 0%,     #3B82F6 15%,    #1E3A8A 40%,    #111827 70%, #020617 100% );
+      color: #fff;
+    }
+
+    #profileCard #navbar-buttons button {
+      background: #000;
+    }
+
+    #profilePhoto {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 10px;
+    }
+
+    #profilePhoto img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #profileInfo {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    #profileName {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    #profileEmail {
+      font-size: 14px;
+    }
+
+    #profileButtons {
+      display: flex;
+      align-items: center;
+    }
+
+    #content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+      padding: 20px;
+      margin-top: 50px;
+    }
+
+    #signInButton {
+      display: block;
+    }
+
+    @media only screen and (max-width: 600px) {
+      #profileCard {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      #userInfo {
+        margin-top: 10px;
+      }
+
+      #navbar-buttons {
+        margin-top: 10px;
+      }
+    }
+
+    #content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+      padding: 20px;
+      margin-top: 50px;
+    }
+
+    details {
+      margin-bottom: 20px;
+      color: #ddd;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      cursor: pointer;
+      color: #fff;
+      list-style: none;
+    }
+
+    details p {
+      margin-bottom: 15px;
+    }
+
+    details ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    details li {
+      margin-bottom: 8px;
+      list-style: initial;
+    }
+
+    details a {
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    details a:hover {
+      text-decoration: underline;
+      color: #8A6E2F;
+    }
+
+    #intro {
+      padding-top: 10vh;
+      text-align: center;
+    }
+
+    #intro img {
+      max-width: 75vw;
+    }
+
+    #intro h2 {
+      margin-top: 10px;
+      font-size: 8vh;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="navbar">
+    <div id="logo-container">
+      <div id="logo">
+        <img src="https://i.ibb.co/7d1wCVHj/Cipher-Saga-Techno-Logo.png" alt="Cipher-Saga-Techno-Logo" border="0">
+      </div>
+      <div id="name">Cipher Saga - <i>Freshers Edition</i></div>
+    </div>
+    <div id="navbar-buttons">
+      <button onclick="lb()"><i class="fa-solid fa-medal"></i></button>
+      <button onclick="contri()"><i class="fa-solid fa-users-gear"></i></button>
+    </div>
+  </div>
+
+  <div id="intro">
+    <img src="https://i.ibb.co/7d1wCVHj/Cipher-Saga-Techno-Logo.png" alt="Cipher-Saga-Techno-Logo" border="0">
+    <h2>“Experience the Ultimate Challenge”</h2>
+  </div>
+
+  <div id="profileCard">
+    <div id="profilePhoto">
+      <img src="" alt="User Profile">
+    </div>
+    <div id="userInfo">
+      <div id="userName"></div>
+      <div id="userEmail"></div>
+      <div id="userPoints"></div>
+    </div>
+    <div id="navbar-buttons">
+      <button id="signInButton">Sign In with Google</button>
+      <button id="signOutButton">Sign Out</button>
+      <button id="toggleHideButton" onclick="toggleHide()">Hide</button>
+      <button id="play" onclick="play()">Play</button>
+    </div>
+  </div>
+
+  <div id="content">
+    <details>
+      <summary><i class="fa-solid fa-angles-down"></i> &nbsp;&nbsp;&nbsp; About The Event</summary>
+      <p>
+       Cipher Saga is an online cryptic hunt event hosted during EPITOME, the annual techno-management fest of Gati Shakti Vishwavidyalaya. Participants tackle a series of challenging levels, deciphering clues and solving riddles to progress. This tests their wit, collaboration, and problem-solving skills, which will leave everyone thrilled and eager for more.
+      </p>
+    </details>
+
+    <details>
+      <summary><i class="fa-solid fa-angles-down"></i> &nbsp;&nbsp;&nbsp; What Are Cryptic Hunts?</summary>
+      <p>
+        Cryptic hunts are like treasure hunts, but online. They require you to hunt the internet for clues and hints to
+        solve given questions. Cipher coders, AI tools, QR codes, coding softwares, etc. are all allowed and to be used.
+        You do not require any coding knowledge to win one, but it always helps!
+      </p>
+    </details>
+
+    <details>
+      <summary><i class="fa-solid fa-angles-down"></i> &nbsp;&nbsp;&nbsp; Rules</summary>
+      <ul>
+        <li>Use your college id to register</li>
+        <li>Make sure you have registered on the platform to GET A TASTE OF CIPHER SAGA.</li>
+        <li>Reverse engineering the platform means direct ban from the competition. Bugs if found should be reported and
+          not exploited. Exploiting a bug also leads to disqualification.</li>
+        <li>By playing the game, you adhere to agree to all the rules above.</li>
+        <li>Now, Just say<i> Game On</i></li>
+      </ul>
+    </details>
+
+    <details>
+      <summary><i class="fa-solid fa-angles-down"></i> &nbsp;&nbsp;&nbsp; Guidelines</summary>
+      <ul>
+        <li>All answers are lower case without any special characters like space, "?", "/", etc. Don't worry though, we
+          normalize your inputs anyways! Answer may contain digits though!</li>
+        <li>File passwords are all lower case without any special characters. We do not normalize this. So be wary while
+          you enter file passwords. Passwords may contain digits though!</li>
+        <li>Stay aware for in platform hints. They could take you far in the game.</li>
+        <li>Every clue in the question is important. If it wasn't important, it wouldn't be there.</li>
+        <li>Beware of the spelling you enter, we do not autocorrect.</li>
+      </ul>
+    </details>
+
+    <details>
+      <summary><i class="fa-solid fa-angles-down"></i> &nbsp;&nbsp;&nbsp; Learning Resources</summary>
+      <p><i>Note: Not all tools and approaches are listed below. Read these to get you through some of the levels. But
+          tougher levels requires much more brain power and tools not listed here may also be used.</i></p>
+      <p>
+        Cryptic hunts generally revolve around tech, trivia, pop culture, and mostly anything you can find on the
+        internet. Googling is allowed and heavily encouraged, but it won't directly get you the answer in most cases.
+        Think logically, make connections between different parts of levels. Make sure you check the source of the
+        webpage for any hints hidden there. Cryptic hunts are all about connecting the dots and finding the solutions.
+      </p>
+            <p>The levels will basically consist of a set of clues, all which link to ONE ANSWER.
+        The difficulty is random. You can expect questions of any difficulty at any level.</p>
+      <p>When you get two or more clues, try to connect them and find an interrelated clue from it. </p>
+      <p>If you can't figure out the hint, try breaking it down and solving it in parts.</p>
+      <p>You will usually find clues in the following places (Look for them carefully, and try discovering more
+        yourself):</p>
+      <ul>
+        <li>The hunt's site: Clues are sometimes hidden in the hunt's rules and maybe even in the event descriptions. If
+          you get a blank document as a clue try using tools as some of the hunts hide the clue by camouflaging it. The
+          page title. The URL. Focus on every word carefully as almost every hunt uses a lot of wordplay.</li>
+        
+        <li>Images: Name of the image file can be very helpful. Dimensions of the image can provide hints. Strings can
+          be hidden in the metadata of the images. Steganography is frequently used. Steganography is a technique of
+          hiding information within another image, invisible to the naked eye to avoid detection. Changing contrast,
+          color schemes, brightness etc.can also help. Headers or the file type may have issues, correcting/changing
+          them is a common technique. Online tools like aperisolve can be used along.</li>
+        <li>Backlinks: Backlinks are very important aspects of hunts and are also almost always used in hunts. For
+          images, the most famous backlink site is imgur.com. pastebin.com is also a very famous backlink site, it is
+          used for storing clues. Sometimes, the pastebin can be password encrypted, in that case, we need to find a
+          clue that fits the password. bit.ly is a famous URL shortener used along withtinyurl.com (which can have a
+          name as a backlink) Another used backlink site is imgflip.com If you are not able to figure out which site the
+          backlink belongs to, you can always go to a backlink identifier such as a4x.me. Sometimes the backlinks are
+          also encrypted.</li>
+      </ul>
+    </details>
+
+  </div>
+  <footer>
+    <p><a href="credits.html">Made with &#10084; by Programming
+        Domain, TechnoCrats GSV</a></p>
+  </footer>
+  <script>
+          const firebaseConfig = {
+    apiKey: "AIzaSyDhCvHuJoiNca1Wa3oda5DWNhk724gDGKQ",
+    authDomain: "ciphersaga-freshers.firebaseapp.com",
+    databaseURL: "https://ciphersaga-freshers-default-rtdb.firebaseio.com",
+    projectId: "ciphersaga-freshers",
+    storageBucket: "ciphersaga-freshers.firebasestorage.app",
+    messagingSenderId: "982507217891",
+    appId: "1:982507217891:web:4e346bbef8d9d216b4f6d6",
+    measurementId: "G-017H3KHXSJ"
+  };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    function updateProfileCard(user) {
+      const profilePhotoElement = document.getElementById('profilePhoto').getElementsByTagName('img')[0];
+      const profileNameElement = document.getElementById('userName');
+      const profileEmailElement = document.getElementById('userEmail');
+      const profilePointsElement = document.getElementById('userPoints');
+      document.getElementById('signInButton').style.display = 'none';
+      document.getElementById('intro').style.display = 'none';
+
+      if (user.photoURL) {
+        profilePhotoElement.src = user.photoURL;
+      } else {
+        profilePhotoElement.src = 'https://variety.com/wp-content/uploads/2021/07/Rick-Astley-Never-Gonna-Give-You-Up.png?w=1024';
+      }
+
+      profileNameElement.innerHTML = user.displayName || 'Unknown';
+      profileEmailElement.innerHTML = user.email || 'No email available';
+
+      const usersRef = database.ref('/users/' + user.uid);
+      usersRef.once('value')
+        .then(snapshot => {
+          const userData = snapshot.val();
+          if (userData && userData.points !== undefined) {
+            profilePointsElement.innerHTML = 'Points: ' + userData.points;
+          } else {
+            profilePointsElement.innerHTML = 'No points available';
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching user data:", error);
+          profilePointsElement.innerHTML = 'Error fetching points';
+        });
+    }
+
+ auth.onAuthStateChanged(user => {
+  if (user) {
+    if (user.email.endsWith("btech24@gsv.ac.in") || user.email === "shreyamohanty.p6@gmail.com" || user.email === "shreya.mohanty_btech23@gsv.ac.in" || user.email === "rishav.kumar_btech23@gsv.ac.in") {
+      updateProfileCard(user);   
+      updateHideButtonText();
+    } else {
+      alert("Only GSV FY students can sign in.");
+      auth.signOut();  
+    }
+  } else {
+    handleSignOut();
+  }
+});
+
+    document.getElementById('signInButton').addEventListener('click', () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(result => {
+          handleSignIn(result.user);
+        })
+        .catch(error => {
+          console.error("Error signing in:", error);
+        });
+    });
+
+    document.getElementById('signOutButton').addEventListener('click', () => {
+      auth.signOut();
+    });
+
+    function handleSignIn(user) {
+      const email = user.email;
+        const usersRef = database.ref('/users/' + user.uid);
+        usersRef.transaction(function (currentData) {
+          if (!currentData) {
+            return {
+              points: 0,
+              name: user.displayName || 'Unknown',
+              hide: 0,
+              banned: 0
+            };
+          }
+        })
+          .then(() => {
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('signInButton').style.display = 'none';
+            document.getElementById('signOutButton').style.display = 'block';
+            document.getElementById('toggleHideButton').style.display = 'block';
+            document.getElementById('play').style.display = 'block';
+            document.getElementById('profilePhoto').style.display = 'block';
+            document.getElementById('userInfo').style.display = 'block';
+            document.getElementById('profileCard').style.justifyContent = 'space-between';
+          })
+          .catch(error => {
+            console.error("Error creating /users/uid node:", error);
+          });
+      } 
+  
+
+    function handleSignOut() {
+      document.getElementById('intro').style.display = 'block';
+      document.getElementById('signInButton').style.display = 'block';
+      document.getElementById('signOutButton').style.display = 'none';
+      document.getElementById('toggleHideButton').style.display = 'none';
+      document.getElementById('play').style.display = 'none';
+      document.getElementById('profilePhoto').style.display = 'none';
+      document.getElementById('userInfo').style.display = 'none';
+      document.getElementById('profileCard').style.justifyContent = 'center';
+    }
+
+    function toggleHide() {
+      const user = firebase.auth().currentUser;
+      if (user) {
+        const userId = user.uid;
+        const userRef = firebase.database().ref('users/' + userId);
+        userRef.once('value').then(snapshot => {
+          const hideValue = snapshot.val().hide;
+          const newHideValue = (hideValue === 0) ? 1 : 0;
+          userRef.update({ hide: newHideValue }).then(() => {
+            document.getElementById('toggleHideButton').textContent = (newHideValue === 0) ? 'Hide' : 'Unhide';
+          }).catch(error => {
+            console.error('Error updating hide value:', error);
+          });
+        }).catch(error => {
+          console.error('Error fetching hide value:', error);
+        });
+      } else {
+        console.error('User is not signed in.');
+      }
+    }
+
+    async function updateHideButtonText() {
+      const user = firebase.auth().currentUser;
+      if (user) {
+        try {
+          const userId = user.uid;
+          const userRef = firebase.database().ref('users/' + userId);
+          const snapshot = await userRef.once('value');
+          const hideValue = snapshot.val().hide;
+          document.getElementById('toggleHideButton').textContent = hideValue ? 'Unhide' : 'Hide';
+        } catch (error) {
+          console.error('Error fetching hide value:', error);
+        }
+      } else {
+        console.error('User is not signed in.');
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const navbarHeight = document.getElementById('navbar').offsetHeight;
+      document.getElementById('profileCard').style.marginTop = navbarHeight + 'px';
+    });
+
+    // Nav-bar Buttons
+
+    function play() {
+      window.location.href = 'index.html';
+    }
+
+    function home() {
+      window.location.href = 'register.html';
+    }
+
+    function lb() {
+      window.location.href = 'leaderboard.html';
+    }
+
+    function contri() {
+      window.location.href = 'credits.html';
+    }
+  </script>
+</body>
+
+</html>

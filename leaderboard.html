@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Leaderboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/YtmNbTq/transparent-logo.png">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="navbar">
+        <div id="logo-container">
+            <div id="logo">
+                <img src="https://i.ibb.co/7d1wCVHj/Cipher-Saga-Techno-Logo.png" alt="Cipher-Saga-Techno-Logo" border="0">
+            </div>
+            <div id="name">Cipher Saga <i> Freshers Edition</i></div>
+        </div>
+        <div id="navbar-buttons">
+            <button onclick="play()"><i class="fa-solid fa-play"></i></button>
+            <button onclick="home()"><i class="fa-solid fa-house"></i></button>
+            <button onclick="contri()"><i class="fa-solid fa-users-gear"></i></button>
+        </div>
+    </div>
+    <div id="content">
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>User</th>
+                <th>Points</th>
+            </tr>
+            <tr>
+                <td><i class="fa-solid fa-infinity"></i></td>
+                <td>ORGANIZERS</td>
+                <td><i class="fa-solid fa-infinity"></i></td>
+            </tr>
+        </table>
+    </div>
+    <footer>
+        <p><a href="credits.html">Made with &#10084; by Programming
+                Domain, TechnoCrats GSV</a></p>
+    </footer>
+    <script>
+          const firebaseConfig = {
+    apiKey: "AIzaSyDhCvHuJoiNca1Wa3oda5DWNhk724gDGKQ",
+    authDomain: "ciphersaga-freshers.firebaseapp.com",
+    databaseURL: "https://ciphersaga-freshers-default-rtdb.firebaseio.com",
+    projectId: "ciphersaga-freshers",
+    storageBucket: "ciphersaga-freshers.firebasestorage.app",
+    messagingSenderId: "982507217891",
+    appId: "1:982507217891:web:4e346bbef8d9d216b4f6d6",
+    measurementId: "G-017H3KHXSJ"
+  };
+        firebase.initializeApp(firebaseConfig);
+        var usersRef = firebase.database().ref('users');
+
+        usersRef.once('value').then(function (snapshot) {
+            const table = document.querySelector('table');
+            table.querySelectorAll("tr:not(:first-child):not(:nth-child(2))").forEach(row => row.remove());
+            if (!snapshot.exists()) return;
+            var users = Object.entries(snapshot.val());
+            users.sort(function (a, b) {
+                if (b[1].points !== a[1].points) {
+                    return b[1].points - a[1].points;
+                } else {
+                    return a[1].latest - b[1].latest;
+                }
+            });
+            var rank = 1;
+
+            users.forEach(function (user) {
+                var userId = user[0];
+                var points = user[1].points;
+                var hide = user[1].hide;
+
+                var userNameRef = firebase.database().ref('users/' + userId + '/name');
+                userNameRef.once('value').then(function (nameSnapshot) {
+                    var userName = nameSnapshot.val() || 'Unknown';
+                    if (hide === 1 && firebase.auth().currentUser.email !== 'shreyamohanty.p6@gmail.com') {
+                        userName = 'Hidden';
+                    }
+
+                    var row = "<tr><td>" + rank + "</td><td>" + userName + "</td><td>" + points + "</td></tr>";
+                    document.querySelector('table').insertAdjacentHTML('beforeend', row);
+                    rank++;
+                }).catch(function (error) {
+                    console.error("Error fetching user name:", error);
+                });
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const navbarHeight = document.getElementById('navbar').offsetHeight;
+
+            document.getElementById('content').style.marginTop = navbarHeight + 'px';
+        });
+
+        // Nav-bar Buttons
+
+        function play() {
+            window.location.href = 'index.html';
+        }
+
+        function home() {
+            window.location.href = 'register.html';
+        }
+
+        function lb() {
+            window.location.href = 'leaderboard.html';
+        }
+
+        function contri() {
+            window.location.href = 'credits.html';
+        }
+    </script>
+</body>
+
+</html>
