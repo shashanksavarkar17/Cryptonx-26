@@ -835,7 +835,6 @@
       </div>
       <div class="cx-profile-actions">
         <button id="signOutButton" class="cx-btn-small">Sign Out</button>
-        <button id="toggleHideButton" class="cx-btn-small" onclick="toggleHide()">Hide</button>
         <button id="play" class="cx-btn-small cx-btn-small--primary" onclick="play()">Play</button>
       </div>
     </div>
@@ -1037,7 +1036,6 @@
   if (user) {
     if (user.email.endsWith("btech24@gsv.ac.in") || user.email === "shreyamohanty.p6@gmail.com" || user.email === "shreya.mohanty_btech23@gsv.ac.in" || user.email === "rishav.kumar_btech23@gsv.ac.in") {
       updateProfileCard(user);
-      updateHideButtonText();
     } else {
       alert("Only GSV FY students can sign in.");
       auth.signOut();
@@ -1079,7 +1077,6 @@
             document.getElementById('intro').style.display = 'none';
             document.getElementById('signInButton').style.display = 'none';
             document.getElementById('signOutButton').style.display = 'block';
-            document.getElementById('toggleHideButton').style.display = 'block';
             document.getElementById('play').style.display = 'block';
             document.getElementById('profilePhoto').style.display = 'block';
             document.getElementById('userInfo').style.display = 'block';
@@ -1095,50 +1092,11 @@
       document.getElementById('intro').style.display = 'block';
       document.getElementById('signInButton').style.display = 'block';
       document.getElementById('signOutButton').style.display = 'none';
-      document.getElementById('toggleHideButton').style.display = 'none';
       document.getElementById('play').style.display = 'none';
       document.getElementById('profilePhoto').style.display = 'none';
       document.getElementById('userInfo').style.display = 'none';
       document.getElementById('profileCard').style.display = 'none';
       document.getElementById('profileCard').style.justifyContent = 'center';
-    }
-
-    function toggleHide() {
-      const user = firebase.auth().currentUser;
-      if (user) {
-        const userId = user.uid;
-        const userRef = firebase.database().ref('users/' + userId);
-        userRef.once('value').then(snapshot => {
-          const hideValue = snapshot.val().hide;
-          const newHideValue = (hideValue === 0) ? 1 : 0;
-          userRef.update({ hide: newHideValue }).then(() => {
-            document.getElementById('toggleHideButton').textContent = (newHideValue === 0) ? 'Hide' : 'Unhide';
-          }).catch(error => {
-            console.error('Error updating hide value:', error);
-          });
-        }).catch(error => {
-          console.error('Error fetching hide value:', error);
-        });
-      } else {
-        console.error('User is not signed in.');
-      }
-    }
-
-    async function updateHideButtonText() {
-      const user = firebase.auth().currentUser;
-      if (user) {
-        try {
-          const userId = user.uid;
-          const userRef = firebase.database().ref('users/' + userId);
-          const snapshot = await userRef.once('value');
-          const hideValue = snapshot.val().hide;
-          document.getElementById('toggleHideButton').textContent = hideValue ? 'Unhide' : 'Hide';
-        } catch (error) {
-          console.error('Error fetching hide value:', error);
-        }
-      } else {
-        console.error('User is not signed in.');
-      }
     }
 
     document.addEventListener("DOMContentLoaded", function () {
