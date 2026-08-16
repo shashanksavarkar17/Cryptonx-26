@@ -258,19 +258,17 @@
 
       #fileButton {
         display: none;
-        align-self: flex-start;
-        padding: 18px 0 18px 0;
+        align-self: center;
+        padding: 14px 22px;
       }
 
-      .cx-hint-box {
+      /* In-card hint */
+      .cx-hint-widget {
         display: none;
         flex-direction: column;
-        gap: 8px;
-        padding: 18px 20px;
-        background: #0D0F0E;
-        border: 1px dashed var(--cx-card-border);
-        border-radius: 16px;
-        box-shadow: var(--cx-pill-shadow);
+        gap: 10px;
+        padding-top: 16px;
+        border-top: 1px solid var(--cx-card-border);
       }
 
       .cx-hint-label {
@@ -282,17 +280,8 @@
 
       .cx-hint-text {
         margin: 0;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 15px;
-        letter-spacing: 3px;
-        color: var(--cx-muted);
-        transition: color .2s ease;
-      }
-
-      .cx-hint-text.cx-hint-revealed {
         font-family: 'Inter', sans-serif;
         font-size: 15px;
-        letter-spacing: normal;
         line-height: 1.6;
         color: var(--cx-heading);
       }
@@ -552,13 +541,13 @@
         <button id="fileButton" class="cx-btn-small" onclick="openFile()">
           <i class="fa-solid fa-paperclip"></i> View File
         </button>
-        <div id="hintBox" class="cx-hint-box">
-          <span class="cx-section-title cx-hint-label"><i class="fa-solid fa-lightbulb"></i> Hint</span>
-          <p id="hintText" class="cx-hint-text">********</p>
-        </div>
         <div class="cx-answer-row">
           <input type="text" id="answerInput" placeholder="Enter your answer" onkeydown="if (event.key === 'Enter') submitAnswer();" />
           <button id="submitButton" class="cx-btn-pill" onclick="submitAnswer()">Submit</button>
+        </div>
+        <div id="hintWidget" class="cx-hint-widget">
+          <span class="cx-section-title cx-hint-label"><i class="fa-solid fa-lightbulb"></i> Hint</span>
+          <p id="hintText" class="cx-hint-text"></p>
         </div>
       </div>
 
@@ -704,19 +693,13 @@
                       "none";
                   }
 
-                  const hintBox = document.getElementById("hintBox");
+                  const hintWidget = document.getElementById("hintWidget");
                   const hintText = document.getElementById("hintText");
-                  if (questionData.hint) {
-                    hintBox.style.display = "flex";
-                    if (questionData.isHint) {
-                      hintText.innerText = questionData.hint;
-                      hintText.classList.add("cx-hint-revealed");
-                    } else {
-                      hintText.innerText = "********";
-                      hintText.classList.remove("cx-hint-revealed");
-                    }
+                  if (questionData.hint && questionData.isHint === 1) {
+                    hintText.innerText = questionData.hint;
+                    hintWidget.style.display = "flex";
                   } else {
-                    hintBox.style.display = "none";
+                    hintWidget.style.display = "none";
                   }
                 }
               },
