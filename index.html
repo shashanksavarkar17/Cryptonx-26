@@ -110,6 +110,17 @@
         color: var(--cx-red);
       }
 
+      .cx-hamburger {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--cx-heading);
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 4px 6px;
+      }
+
       /* Main */
       .cx-main {
         box-sizing: border-box;
@@ -411,12 +422,38 @@
           font-size: 20px;
         }
 
+        .cx-hamburger {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+
         .cx-nav {
-          gap: 14px;
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0;
+          background: rgba(13, 15, 14, 0.97);
+          border-top: 1px solid var(--cx-card-border);
+          padding: 8px 16px 16px;
+        }
+
+        #navbar.cx-nav-open .cx-nav {
+          display: flex;
         }
 
         .cx-nav a {
           font-size: 14px;
+          padding: 14px 0;
+          border-bottom: 1px solid var(--cx-card-border);
+        }
+
+        .cx-nav a:last-child {
+          border-bottom: none;
         }
 
         .cx-card {
@@ -454,7 +491,20 @@
         <a href="javascript:void(0)" onclick="lb()">Leaderboard</a>
         <a href="javascript:void(0)" onclick="contri()">Credits</a>
       </nav>
+      <button type="button" class="cx-hamburger" id="navHamburger" aria-label="Toggle navigation" aria-expanded="false">
+        <i class="fa-solid fa-bars"></i>
+      </button>
     </div>
+    <script>
+      document.getElementById("navHamburger").addEventListener("click", function () {
+        document.getElementById("navbar").classList.toggle("cx-nav-open");
+      });
+      document.querySelectorAll(".cx-nav a").forEach(function (a) {
+        a.addEventListener("click", function () {
+          document.getElementById("navbar").classList.remove("cx-nav-open");
+        });
+      });
+    </script>
 
     <main class="cx-main">
       <div id="content" class="cx-card cx-quiz-card" style="display: none">
