@@ -55,7 +55,7 @@
       z-index: 1000;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 32px;
+      padding: 16px 48px;
       background: rgba(13, 15, 14, 0.8);
       box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1), inset -2px -2px 4px rgba(0, 0, 0, 0.4);
       -webkit-backdrop-filter: blur(6px);
@@ -86,8 +86,8 @@
     .cx-brand {
       font-family: 'Sekuya', 'Montserrat', sans-serif;
       font-weight: 400;
-      font-size: 28px;
-      letter-spacing: -1.4px;
+      font-size: 32px;
+      letter-spacing: -1.6px;
       color: var(--cx-red);
     }
 
@@ -114,11 +114,11 @@
     /* Main */
     .cx-main {
       box-sizing: border-box;
-      max-width: 1184px;
+      max-width: 1280px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      padding: 32px 24px 64px;
+      padding: 128px 48px 64px;
       gap: 32px;
     }
 
@@ -264,16 +264,8 @@
       flex-shrink: 0;
     }
 
-    /* Card grids */
-    .cx-grid-2 {
-      display: flex;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-
     .cx-card {
       box-sizing: border-box;
-      flex: 1 1 280px;
       display: flex;
       flex-direction: column;
       gap: 24px;
@@ -306,7 +298,19 @@
       letter-spacing: 0;
     }
 
-    /* Accordion (mobile only — see media query below; inert on desktop) */
+    /* Card grids (desktop: 2-up, per registerdesign.md) */
+    .cx-grid-2 {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .cx-grid-2 .cx-card {
+      flex: 1 1 280px;
+    }
+
+    /* Accordion: always expanded on desktop; collapses on tap only under the mobile
+       breakpoint (see media query below) */
     .cx-card-body {
       display: contents;
     }
@@ -531,7 +535,7 @@
     .cx-page #profileCard {
       box-sizing: border-box;
       width: 100%;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
@@ -623,18 +627,19 @@
     .cx-page footer.cx-footer {
       background: #080909;
       box-shadow: inset 0px 2px 8px rgba(0, 0, 0, 0.5);
-      padding: 32px 32px 24px;
-      text-align: center;
+      padding: 32px 48px;
       margin-top: 0;
     }
 
     .cx-footer-inner {
-      max-width: 1184px;
+      max-width: 1280px;
       margin: 0 auto;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
-      gap: 12px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
     }
 
     .cx-footer-brand {
@@ -642,6 +647,7 @@
       font-weight: 400;
       font-size: 24px;
       color: var(--cx-heading);
+      flex-shrink: 0;
     }
 
     .cx-footer-copy {
@@ -649,6 +655,7 @@
       font-family: 'Inter', sans-serif;
       font-size: 14px;
       color: var(--cx-gold);
+      text-align: center;
     }
 
     .cx-footer-links {
@@ -656,6 +663,7 @@
       gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
+      flex-shrink: 0;
     }
 
     .cx-footer-links a {
@@ -687,7 +695,58 @@
       }
 
       .cx-main {
-        padding-top: 24px;
+        padding: 96px 20px 48px;
+      }
+
+      .cx-page footer.cx-footer {
+        padding: 32px 20px;
+      }
+
+      .cx-footer-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+      }
+
+      .cx-grid-2 {
+        flex-direction: column;
+      }
+
+      .cx-grid-2 .cx-card {
+        flex: none;
+      }
+
+      /* Accordion cards: collapsed by default on mobile, tap the header to expand */
+      .cx-card-body {
+        display: none;
+      }
+
+      .cx-learning .cx-card-body {
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .cx-card.is-open .cx-card-body {
+        display: block;
+      }
+
+      .cx-learning.is-open .cx-card-body {
+        display: flex;
+      }
+
+      .cx-accordion-header {
+        cursor: pointer;
+        justify-content: space-between;
+      }
+
+      .cx-accordion-chevron {
+        display: inline-block;
+        margin-left: auto;
+        transition: transform .25s ease;
+      }
+
+      .is-open .cx-accordion-chevron {
+        transform: rotate(180deg);
       }
 
       .cx-hero {
@@ -722,39 +781,6 @@
         width: 100%;
         max-width: 320px;
         justify-content: center;
-      }
-
-      /* Accordion cards: collapsed by default, tap the header to expand */
-      .cx-card-body {
-        display: none;
-      }
-
-      .cx-learning .cx-card-body {
-        flex-direction: column;
-        gap: 32px;
-      }
-
-      .cx-card.is-open .cx-card-body {
-        display: block;
-      }
-
-      .cx-learning.is-open .cx-card-body {
-        display: flex;
-      }
-
-      .cx-accordion-header {
-        cursor: pointer;
-        justify-content: space-between;
-      }
-
-      .cx-accordion-chevron {
-        display: inline-block;
-        margin-left: auto;
-        transition: transform .25s ease;
-      }
-
-      .is-open .cx-accordion-chevron {
-        transform: rotate(180deg);
       }
 
       .cx-page #profileCard {
@@ -795,6 +821,21 @@
         <span class="cx-hero-credit">GSV's Cipher Saga Team Initiative</span>
         <p class="cx-hero-tagline">Experience the Ultimate Challenge</p>
         <button id="signInButton" class="cx-btn-pill"><i class="fa-brands fa-google"></i> Sign In with Google</button>
+      </div>
+    </div>
+
+    <div id="profileCard">
+      <div id="profilePhoto">
+        <img src="" alt="User Profile">
+      </div>
+      <div id="userInfo">
+        <div id="userName"></div>
+        <div id="userEmail"></div>
+        <div id="userPoints"></div>
+      </div>
+      <div class="cx-profile-actions">
+        <button id="signOutButton" class="cx-btn-small">Sign Out</button>
+        <button id="play" class="cx-btn-small cx-btn-small--primary" onclick="play()">Play</button>
       </div>
     </div>
 
@@ -964,6 +1005,7 @@
       const profilePointsElement = document.getElementById('userPoints');
       document.getElementById('signInButton').style.display = 'none';
       document.getElementById('intro').style.display = 'none';
+      document.getElementById('profileCard').style.display = 'flex';
 
       if (user.photoURL) {
         profilePhotoElement.src = user.photoURL;
@@ -994,7 +1036,6 @@
   if (user) {
     if (user.email.endsWith("btech26@gsv.ac.in") || user.email === "atulya.bharat_btech24@gsv.ac.in" || user.email === "shreya.mohanty_btech23@gsv.ac.in" || user.email === "rishav.kumar_btech23@gsv.ac.in") {
       updateProfileCard(user);
-      updateHideButtonText();
     } else {
       alert("Only GSV FY students can sign in.");
       auth.signOut();
@@ -1036,7 +1077,6 @@
             document.getElementById('intro').style.display = 'none';
             document.getElementById('signInButton').style.display = 'none';
             document.getElementById('signOutButton').style.display = 'block';
-            document.getElementById('toggleHideButton').style.display = 'block';
             document.getElementById('play').style.display = 'block';
             document.getElementById('profilePhoto').style.display = 'block';
             document.getElementById('userInfo').style.display = 'block';
@@ -1052,49 +1092,11 @@
       document.getElementById('intro').style.display = 'block';
       document.getElementById('signInButton').style.display = 'block';
       document.getElementById('signOutButton').style.display = 'none';
-      document.getElementById('toggleHideButton').style.display = 'none';
       document.getElementById('play').style.display = 'none';
       document.getElementById('profilePhoto').style.display = 'none';
       document.getElementById('userInfo').style.display = 'none';
+      document.getElementById('profileCard').style.display = 'none';
       document.getElementById('profileCard').style.justifyContent = 'center';
-    }
-
-    function toggleHide() {
-      const user = firebase.auth().currentUser;
-      if (user) {
-        const userId = user.uid;
-        const userRef = firebase.database().ref('users/' + userId);
-        userRef.once('value').then(snapshot => {
-          const hideValue = snapshot.val().hide;
-          const newHideValue = (hideValue === 0) ? 1 : 0;
-          userRef.update({ hide: newHideValue }).then(() => {
-            document.getElementById('toggleHideButton').textContent = (newHideValue === 0) ? 'Hide' : 'Unhide';
-          }).catch(error => {
-            console.error('Error updating hide value:', error);
-          });
-        }).catch(error => {
-          console.error('Error fetching hide value:', error);
-        });
-      } else {
-        console.error('User is not signed in.');
-      }
-    }
-
-    async function updateHideButtonText() {
-      const user = firebase.auth().currentUser;
-      if (user) {
-        try {
-          const userId = user.uid;
-          const userRef = firebase.database().ref('users/' + userId);
-          const snapshot = await userRef.once('value');
-          const hideValue = snapshot.val().hide;
-          document.getElementById('toggleHideButton').textContent = hideValue ? 'Unhide' : 'Hide';
-        } catch (error) {
-          console.error('Error fetching hide value:', error);
-        }
-      } else {
-        console.error('User is not signed in.');
-      }
     }
 
     document.addEventListener("DOMContentLoaded", function () {

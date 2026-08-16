@@ -57,7 +57,7 @@
       z-index: 1000;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 32px;
+      padding: 16px 48px;
       background: rgba(13, 15, 14, 0.8);
       box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1), inset -2px -2px 4px rgba(0, 0, 0, 0.4);
       -webkit-backdrop-filter: blur(6px);
@@ -88,8 +88,8 @@
     .cx-brand {
       font-family: 'Sekuya', 'Montserrat', sans-serif;
       font-weight: 400;
-      font-size: 28px;
-      letter-spacing: -1.4px;
+      font-size: 32px;
+      letter-spacing: -1.6px;
       color: var(--cx-red);
     }
 
@@ -116,11 +116,11 @@
     /* Main */
     .cx-main {
       box-sizing: border-box;
-      max-width: 1184px;
+      max-width: 1280px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      padding: 32px 24px 64px;
+      padding: 128px 48px 64px;
       gap: 32px;
     }
 
@@ -384,18 +384,19 @@
     .cx-page footer.cx-footer {
       background: #080909;
       box-shadow: inset 0px 2px 8px rgba(0, 0, 0, 0.5);
-      padding: 32px 32px 24px;
-      text-align: center;
+      padding: 32px 48px;
       margin-top: 0;
     }
 
     .cx-footer-inner {
-      max-width: 1184px;
+      max-width: 1280px;
       margin: 0 auto;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
-      gap: 12px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
     }
 
     .cx-footer-brand {
@@ -559,8 +560,10 @@
         <div class="cx-card">
           <h3 class="cx-section-title" style="margin-bottom:16px;">Your Standing</h3>
           <div id="lbYourStanding" class="cx-lb-standing">
-            <p class="cx-lb-standing-hint">Sign in to see your personal rank and points.</p>
-            <button class="cx-btn-pill" onclick="home()"><i class="fa-brands fa-google"></i> Sign In to Sync</button>
+            <p class="cx-lb-standing-hint">Standings update automatically. Sign in on Home to see your personal
+              rank.</p>
+            <button class="cx-btn-pill" onclick="location.reload()"><i class="fa-solid fa-arrows-rotate"></i>
+              Refresh</button>
           </div>
         </div>
         <div class="cx-card">
@@ -670,7 +673,7 @@
     // and the signed-in user's real rank/points. Independent of the script above —
     // reuses the already-initialized Firebase app, doesn't touch its logic.
     (function () {
-      var endDate = new Date(2026, 8, 20, 12, 0, 0);
+      var endDate = new Date(2026, 7, 18, 23, 59, 59);
       var countdownEl = document.getElementById('lbCountdown');
 
       function pad(n) { return String(n).padStart(2, '0'); }
