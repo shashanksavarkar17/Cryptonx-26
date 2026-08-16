@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Cryptonx'26 - Credits</title>
+  <title>Cryptonx'26 - Terms of Service</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="public/images/technocrats-gsv-logo.svg">
@@ -152,39 +152,13 @@
       color: var(--cx-gold);
     }
 
-    .cx-btn-pill {
-      box-sizing: border-box;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 16px 32px;
-      background: #0D0F0E;
-      box-shadow: var(--cx-btn-shadow);
-      border-radius: 24px;
-      border: none;
-      cursor: pointer;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 600;
-      font-size: 12px;
-      letter-spacing: 0.6px;
-      color: var(--cx-red);
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: transform .15s ease;
-    }
-
-    .cx-btn-pill:hover {
-      transform: translateY(-1px);
-    }
-
-    /* Credits header */
-    .cx-credits-header {
+    /* Legal page header */
+    .cx-legal-header {
       text-align: center;
       margin-bottom: 8px;
     }
 
-    .cx-credits-title {
+    .cx-legal-title {
       margin: 0 0 12px;
       font-family: 'Sekuya', 'Montserrat', sans-serif;
       font-weight: 800;
@@ -200,137 +174,52 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* Event Team */
-    .cx-team-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-    }
-
-    /* Founding Members */
-    .cx-founders-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .cx-founders-grid .cx-founder-top {
-      grid-column: 1 / -1;
-      width: calc(50% - 8px);
+    .cx-legal-subtitle {
       margin: 0 auto;
-    }
-
-    .cx-team-member {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      box-sizing: border-box;
-      padding: 16px;
-      background: #0D0F0E;
-      border: 1px solid var(--cx-card-border);
-      box-shadow: var(--cx-pill-shadow);
-      border-radius: 16px;
-      transition: transform .2s ease;
-    }
-
-    .cx-team-member:hover {
-      transform: translateY(-2px);
-    }
-
-    .cx-avatar {
-      flex-shrink: 0;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--cx-bg);
-      border: 1px solid var(--cx-card-border);
-      box-shadow: var(--cx-pill-shadow);
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
-      font-size: 18px;
-      color: var(--cx-red);
-    }
-
-    .cx-team-member-name {
-      margin: 0;
+      max-width: 480px;
       font-family: 'Inter', sans-serif;
-      font-weight: 600;
       font-size: 16px;
-      color: var(--cx-heading);
-    }
-
-    .cx-team-member-role {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
+      line-height: 1.6;
       color: var(--cx-body);
     }
 
-    .cx-founder-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--cx-heading);
-      text-decoration: none;
-    }
-
-    .cx-team-member-name .cx-founder-link i {
-      font-size: 11px;
-      color: var(--cx-gold);
-    }
-
-    /* Two-column grid (Contributors + Extended Info) */
-    .cx-credits-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      align-items: stretch;
-    }
-
-    .cx-credits-grid > .cx-card {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .cx-thanks-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .cx-thanks-row {
-      display: flex;
-      gap: 16px;
-    }
-
-    .cx-thanks-card {
-      flex: 1;
-      box-sizing: border-box;
-      padding: 18px;
-      background: var(--cx-card);
-      border: 1px solid var(--cx-card-border);
-      box-shadow: var(--cx-card-shadow);
-      border-radius: 16px;
-      text-align: center;
-    }
-
-    .cx-thanks-label {
-      margin: 0 0 6px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--cx-body);
-    }
-
-    .cx-thanks-value {
-      margin: 0;
+    /* Prose */
+    .cx-prose p {
+      margin: 0 0 16px;
       font-family: 'Inter', sans-serif;
-      font-weight: 600;
       font-size: 15px;
+      line-height: 1.7;
+      color: var(--cx-body);
+    }
+
+    .cx-prose p:last-child {
+      margin-bottom: 0;
+    }
+
+    .cx-prose ul {
+      margin: 0 0 16px;
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cx-prose ul:last-child {
+      margin-bottom: 0;
+    }
+
+    .cx-prose li {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--cx-body);
+    }
+
+    .cx-prose strong {
+      color: var(--cx-heading);
+    }
+
+    .cx-prose a {
       color: var(--cx-gold);
     }
 
@@ -438,26 +327,6 @@
         padding: 20px;
       }
 
-      .cx-credits-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .cx-team-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .cx-founders-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .cx-founders-grid .cx-founder-top {
-        width: 100%;
-      }
-
-      .cx-thanks-row {
-        flex-direction: column;
-      }
-
       .cx-page footer.cx-footer {
         padding: 32px 20px;
       }
@@ -497,6 +366,7 @@
       <a href="javascript:void(0)" onclick="home()">Home</a>
       <a href="javascript:void(0)" onclick="play()">Play</a>
       <a href="javascript:void(0)" onclick="lb()">Leaderboard</a>
+      <a href="javascript:void(0)" onclick="contri()">Credits</a>
     </nav>
     <button type="button" class="cx-hamburger" id="navHamburger" aria-label="Toggle navigation" aria-expanded="false">
       <i class="fa-solid fa-bars"></i>
@@ -514,115 +384,54 @@
   </script>
 
   <main class="cx-main">
-    <header class="cx-credits-header">
-      <h1 class="cx-credits-title">Cryptonx'26 <span class="cx-gradient-gold">Credits</span></h1>
+    <header class="cx-legal-header">
+      <h1 class="cx-legal-title">Terms of <span class="cx-gradient-gold">Service</span></h1>
+      <p class="cx-legal-subtitle">
+        The rules of the hunt. By signing in and playing Cryptonx'26, you agree to these terms.
+      </p>
     </header>
 
-    <section class="cx-card">
-      <h2 class="cx-section-title"><i class="fa-solid fa-medal"></i> Founding Members</h2>
-      <div class="cx-founders-grid">
-        <div class="cx-team-member cx-founder-top">
-          <div class="cx-avatar">S</div>
-          <div>
-            <p class="cx-team-member-name"><a class="cx-founder-link" href="https://www.linkedin.com/in/soham-wani-b0726a262/" target="_blank" rel="noopener noreferrer">Soham Wani <i class="fa-solid fa-arrow-up-right-from-square"></i></a></p>
-          </div>
-        </div>
-        <div class="cx-team-member">
-          <div class="cx-avatar">R</div>
-          <div>
-            <p class="cx-team-member-name"><a class="cx-founder-link" href="https://www.linkedin.com/in/rajat-pandey-05669325b/" target="_blank" rel="noopener noreferrer">Rajat Pandey <i class="fa-solid fa-arrow-up-right-from-square"></i></a></p>
-          </div>
-        </div>
-        <div class="cx-team-member">
-          <div class="cx-avatar">S</div>
-          <div>
-            <p class="cx-team-member-name"><a class="cx-founder-link" href="https://www.linkedin.com/in/shreya-m416/" target="_blank" rel="noopener noreferrer">Shreya Mohanty <i class="fa-solid fa-arrow-up-right-from-square"></i></a></p>
-          </div>
-        </div>
-        <div class="cx-team-member">
-          <div class="cx-avatar">R</div>
-          <div>
-            <p class="cx-team-member-name"><a class="cx-founder-link" href="https://www.linkedin.com/in/rkgsv/" target="_blank" rel="noopener noreferrer">Rishav Kumar <i class="fa-solid fa-arrow-up-right-from-square"></i></a></p>
-          </div>
-        </div>
-        <div class="cx-team-member">
-          <div class="cx-avatar">S</div>
-          <div>
-            <p class="cx-team-member-name"><a class="cx-founder-link" href="https://www.linkedin.com/in/shruti-verma-437643291/" target="_blank" rel="noopener noreferrer">Shruti Verma <i class="fa-solid fa-arrow-up-right-from-square"></i></a></p>
-          </div>
-        </div>
-      </div>
+    <section class="cx-card cx-prose">
+      <h2 class="cx-section-title"><i class="fa-solid fa-user-check"></i> Eligibility</h2>
+      <p>
+        Cryptonx'26 is open to GSV first-year students signing in with their official college Google account.
+        Accounts outside this domain will be signed out automatically.
+      </p>
     </section>
 
-    <div class="cx-credits-grid">
-      <section class="cx-card">
-        <h2 class="cx-section-title" style="color:var(--cx-red);"><i class="fa-solid fa-users"></i> Event Heads</h2>
-        <div class="cx-team-grid">
-          <div class="cx-team-member">
-            <div class="cx-avatar">A</div>
-            <div>
-              <p class="cx-team-member-name"><a class="cx-founder-link" href="https://www.linkedin.com/in/abhinavamishra/" target="_blank" rel="noopener noreferrer">Abhinav Mishra <i class="fa-solid fa-arrow-up-right-from-square"></i></a></p>
-              <p class="cx-team-member-role">Coordinator TechnoCrats GSV</p>
-            </div>
-          </div>
-          <div class="cx-team-member">
-            <div class="cx-avatar">P</div>
-            <div>
-              <p class="cx-team-member-name"><a class="cx-founder-link" href="https://www.linkedin.com/in/pranjal-chaturvedi-b46a0a324/" target="_blank" rel="noopener noreferrer">Pranjal Chaturvedi <i class="fa-solid fa-arrow-up-right-from-square"></i></a></p>
-              <p class="cx-team-member-role">Co-Coordinator TechnoCrats GSV</p>
-            </div>
-          </div>
-          <!-- <div class="cx-team-member">
-            <div class="cx-avatar">R</div>
-            <div>
-              <p class="cx-team-member-name">Rishav Kumar</p>
-              <p class="cx-team-member-role">Core Team</p>
-            </div>
-          </div> -->
-        </div>
-      </section>
+    <section class="cx-card cx-prose">
+      <h2 class="cx-section-title"><i class="fa-solid fa-flag-checkered"></i> Gameplay Rules</h2>
+      <ul>
+        <li>Each level must be solved and submitted individually to progress and earn points.</li>
+        <li>Sharing answers, hints, or solutions with other participants is not allowed.</li>
+        <li>Attempting to exploit, brute-force, or otherwise bypass the intended puzzle mechanics is not allowed.</li>
+        <li>Points and rank on the leaderboard are based solely on levels solved through legitimate play.</li>
+      </ul>
+    </section>
 
-      <section class="cx-card">
-        <h2 class="cx-section-title"><i class="fa-solid fa-code"></i> Contributors</h2>
-        <div class="cx-team-grid">
-          <div class="cx-team-member">
-            <div class="cx-avatar">A</div>
-            <div>
-              <p class="cx-team-member-name"><a class="cx-founder-link" href="https://www.linkedin.com/in/atulyabharat/" target="_blank" rel="noopener noreferrer">Atulya Bharat <i class="fa-solid fa-arrow-up-right-from-square"></i></a></p>
-              <p class="cx-team-member-role">Sarkari Aadmi</p>
-            </div>
-          </div>
-          <div class="cx-team-member">
-            <div class="cx-avatar">S</div>
-            <div>
-              <p class="cx-team-member-name"><a class="cx-founder-link" href="https://www.linkedin.com/in/shashanksavarkar/" target="_blank" rel="noopener noreferrer">Shashank Savarkar <i class="fa-solid fa-arrow-up-right-from-square"></i></a></p>
-              <p class="cx-team-member-role">Mei toh lauki hu reee</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+    <section class="cx-card cx-prose">
+      <h2 class="cx-section-title"><i class="fa-solid fa-ban"></i> Disqualification &amp; Bans</h2>
+      <p>
+        Organizers may flag or ban an account found violating these rules. A banned account loses access to the
+        hunt and may be excluded from the leaderboard. Organizer decisions on disqualification are final.
+      </p>
+    </section>
 
-    <div class="cx-thanks-stack">
-      <div class="cx-thanks-card">
-        <p class="cx-thanks-label">Extended Thanks</p>
-        <p class="cx-thanks-value">Student Cell GSV</p>
-      </div>
-      <div class="cx-thanks-card">
-        <p class="cx-thanks-label">Ideation &amp; Learning Resources</p>
-        <p class="cx-thanks-value">IITM BS Tech Society - Cosmos</p>
-      </div>
-      <div class="cx-thanks-row">
-        <div class="cx-thanks-card">
-          <p class="cx-thanks-label">Conducted For</p>
-          <p class="cx-thanks-value">Induction'26</p>
-        </div>
-        <div class="cx-thanks-card">
-          <p class="cx-thanks-label">Conducted By</p>
-          <p class="cx-thanks-value">TechnoCrats GSV</p>
-        </div>
-      </div>
-    </div>
+    <section class="cx-card cx-prose">
+      <h2 class="cx-section-title"><i class="fa-solid fa-trophy"></i> Leaderboard &amp; Results</h2>
+      <p>
+        The leaderboard updates automatically as points are earned. Organizer accounts are shown separately and are
+        not part of the competitive ranking. Final standings at the end of the hunt window are considered official.
+      </p>
+    </section>
+
+    <section class="cx-card cx-prose">
+      <h2 class="cx-section-title"><i class="fa-solid fa-circle-question"></i> Questions</h2>
+      <p>
+        For questions about these terms, reach out to the organizers listed on the
+        <a href="credits.html">Credits</a> page. See also our <a href="privacy-policy.html">Privacy Policy</a>.
+      </p>
+    </section>
   </main>
 
   <footer class="cx-footer">

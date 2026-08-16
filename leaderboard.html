@@ -37,6 +37,9 @@
     }
 
     body.cx-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
       background-color: var(--cx-bg);
       background-image:
         repeating-linear-gradient(0deg, rgba(208, 74, 58, 0.05) 0px, rgba(208, 74, 58, 0.05) 1px, transparent 1px, transparent 40px),
@@ -91,6 +94,7 @@
       font-size: 32px;
       letter-spacing: -1.6px;
       color: var(--cx-red);
+      text-decoration: none;
     }
 
     .cx-nav {
@@ -127,6 +131,8 @@
     /* Main */
     .cx-main {
       box-sizing: border-box;
+      flex: 1 0 auto;
+      width: 100%;
       max-width: 1280px;
       margin: 0 auto;
       display: flex;
@@ -183,11 +189,11 @@
 
     /* Leaderboard header */
     .cx-lb-header {
-      text-align: left;
+      text-align: center;
     }
 
     .cx-lb-title {
-      margin: 0 0 8px;
+      margin: 0;
       font-family: 'Sekuya', 'Montserrat', sans-serif;
       font-weight: 400;
       font-size: clamp(32px, 5vw, 56px);
@@ -195,19 +201,10 @@
       color: var(--cx-white);
     }
 
-    .cx-lb-subtitle {
-      margin: 0;
-      max-width: 640px;
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-      color: var(--cx-body);
-    }
-
     /* Bento grid */
     .cx-lb-grid {
       display: grid;
-      grid-template-columns: 2fr 1fr;
+      grid-template-columns: 1.6fr 1fr;
       gap: 24px;
       align-items: start;
     }
@@ -216,6 +213,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+      min-width: 0;
     }
 
     .cx-lb-table-head {
@@ -338,6 +336,7 @@
       display: flex;
       flex-direction: column;
       gap: 24px;
+      min-width: 0;
     }
 
     .cx-lb-standing {
@@ -400,35 +399,37 @@
     }
 
     .cx-footer-inner {
-      max-width: 1280px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: row;
+      display: grid;
+      grid-template-columns: auto 1fr auto 1fr auto;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 24px;
+      gap: 12px 24px;
     }
 
     .cx-footer-brand {
+      grid-column: 1;
       font-family: 'Sekuya', 'Montserrat', sans-serif;
       font-weight: 400;
       font-size: 24px;
       color: var(--cx-heading);
+      text-decoration: none;
     }
 
     .cx-footer-copy {
+      grid-column: 5;
       margin: 0;
       font-family: 'Inter', sans-serif;
       font-size: 14px;
       color: var(--cx-gold);
+      text-align: right;
+      white-space: nowrap;
     }
 
     .cx-footer-links {
+      grid-column: 3;
       display: flex;
+      align-items: center;
       gap: 16px;
       flex-wrap: wrap;
-      justify-content: center;
     }
 
     .cx-footer-links a {
@@ -445,6 +446,11 @@
     @media only screen and (max-width: 900px) {
       .cx-lb-grid {
         grid-template-columns: 1fr;
+      }
+
+      .cx-lb-side {
+        order: -1;
+        flex-direction: column-reverse;
       }
     }
 
@@ -495,14 +501,6 @@
         padding-top: 24px;
       }
 
-      .cx-lb-header {
-        text-align: center;
-      }
-
-      .cx-lb-subtitle {
-        margin: 0 auto;
-      }
-
       .cx-card {
         padding: 20px;
       }
@@ -546,6 +544,33 @@
       .cx-lb-standing .cx-btn-pill {
         width: 100%;
       }
+
+      .cx-page footer.cx-footer {
+        padding: 32px 20px;
+      }
+
+      .cx-footer-inner {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+        gap: 16px;
+      }
+
+      .cx-footer-brand,
+      .cx-footer-links,
+      .cx-footer-copy {
+        grid-column: 1;
+      }
+
+      .cx-footer-copy {
+        justify-self: center;
+        text-align: center;
+        white-space: normal;
+      }
+
+      .cx-footer-links {
+        justify-content: center;
+      }
     }
   </style>
 </head>
@@ -553,7 +578,7 @@
 <body class="cx-page">
   <div id="navbar">
     <div class="cx-logo-container">
-      <div class="cx-brand">Cryptonx'26</div>
+      <a href="register.html" class="cx-brand">Cryptonx'26</a>
     </div>
     <nav class="cx-nav">
       <a href="javascript:void(0)" onclick="home()">Home</a>
@@ -578,10 +603,6 @@
   <main class="cx-main" id="content">
     <header class="cx-lb-header">
       <h1 class="cx-lb-title">Global Standings</h1>
-      <p class="cx-lb-subtitle">
-        Real-time tracking of participant performance. Points update the moment a correct answer is submitted —
-        climb the ranks by clearing levels.
-      </p>
     </header>
 
     <div class="cx-lb-grid">
@@ -635,14 +656,15 @@
 
   <footer class="cx-footer">
     <div class="cx-footer-inner">
-      <div class="cx-footer-brand">Cryptonx'26</div>
-      <p class="cx-footer-copy">&copy; 2026 TechnoCrats GSV's Programming Domain. All rights reserved.</p>
+      <a href="register.html" class="cx-footer-brand">Cryptonx'26</a>
       <div class="cx-footer-links">
         <a href="index.html">Play</a>
         <a href="leaderboard.html">Leaderboard</a>
         <a href="credits.html">Credits</a>
-        <a href="credits.html">Made with &#10084; by Programming Domain, TechnoCrats GSV</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
       </div>
+      <p class="cx-footer-copy">&copy; 2026 TechnoCrats GSV's Programming Domain. All rights reserved.</p>
     </div>
   </footer>
     <script>
