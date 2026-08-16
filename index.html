@@ -262,6 +262,41 @@
         padding: 18px 0 18px 0;
       }
 
+      .cx-hint-box {
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        padding: 18px 20px;
+        background: #0D0F0E;
+        border: 1px dashed var(--cx-card-border);
+        border-radius: 16px;
+        box-shadow: var(--cx-pill-shadow);
+      }
+
+      .cx-hint-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--cx-gold);
+      }
+
+      .cx-hint-text {
+        margin: 0;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 15px;
+        letter-spacing: 3px;
+        color: var(--cx-muted);
+        transition: color .2s ease;
+      }
+
+      .cx-hint-text.cx-hint-revealed {
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        letter-spacing: normal;
+        line-height: 1.6;
+        color: var(--cx-heading);
+      }
+
       .cx-answer-row {
         display: flex;
         gap: 12px;
@@ -517,6 +552,10 @@
         <button id="fileButton" class="cx-btn-small" onclick="openFile()">
           <i class="fa-solid fa-paperclip"></i> View File
         </button>
+        <div id="hintBox" class="cx-hint-box">
+          <span class="cx-section-title cx-hint-label"><i class="fa-solid fa-lightbulb"></i> Hint</span>
+          <p id="hintText" class="cx-hint-text">********</p>
+        </div>
         <div class="cx-answer-row">
           <input type="text" id="answerInput" placeholder="Enter your answer" onkeydown="if (event.key === 'Enter') submitAnswer();" />
           <button id="submitButton" class="cx-btn-pill" onclick="submitAnswer()">Submit</button>
@@ -631,9 +670,9 @@
             document.getElementById("levelTitle").innerText = `Level ${level}`;
 
             const questionRef = database.ref(`/questions/${level}`);
-            questionRef
-              .once("value")
-              .then((snapshot) => {
+            questionRef.on(
+              "value",
+              (snapshot) => {
                 const questionData = snapshot.val();
 
                 if (questionData) {
@@ -664,11 +703,27 @@
                     document.getElementById("fileButton").style.display =
                       "none";
                   }
+
+                  const hintBox = document.getElementById("hintBox");
+                  const hintText = document.getElementById("hintText");
+                  if (questionData.hint) {
+                    hintBox.style.display = "flex";
+                    if (questionData.isHint) {
+                      hintText.innerText = questionData.hint;
+                      hintText.classList.add("cx-hint-revealed");
+                    } else {
+                      hintText.innerText = "********";
+                      hintText.classList.remove("cx-hint-revealed");
+                    }
+                  } else {
+                    hintBox.style.display = "none";
+                  }
                 }
-              })
-              .catch((error) => {
+              },
+              (error) => {
                 console.error("Error retrieving question:", error);
-              });
+              },
+            );
           })
           .catch((error) => {
             console.error("Error retrieving user points:", error);
