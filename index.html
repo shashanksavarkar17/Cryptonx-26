@@ -468,7 +468,7 @@
           <i class="fa-solid fa-paperclip"></i> View File
         </button>
         <div class="cx-answer-row">
-          <input type="text" id="answerInput" placeholder="Enter your answer" />
+          <input type="text" id="answerInput" placeholder="Enter your answer" onkeydown="if (event.key === 'Enter') submitAnswer();" />
           <button id="submitButton" class="cx-btn-pill" onclick="submitAnswer()">Submit</button>
         </div>
       </div>
