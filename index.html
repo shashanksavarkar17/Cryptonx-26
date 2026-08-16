@@ -230,20 +230,25 @@
         font-family: 'Inter', sans-serif;
         font-size: 16px;
         line-height: 1.6;
+        padding: 18px 0 18px 0;
         color: var(--cx-body);
       }
 
       #imageDisplay {
         display: none;
         max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
         border-radius: 16px;
         border: 1px solid var(--cx-card-border);
+        padding: 18px 0 18px 0;
         box-shadow: var(--cx-pill-shadow);
       }
 
       #fileButton {
         display: none;
         align-self: flex-start;
+        padding: 18px 0 18px 0;
       }
 
       .cx-answer-row {
@@ -255,7 +260,7 @@
       #answerInput {
         box-sizing: border-box;
         flex: 1 1 220px;
-        padding: 14px 18px;
+        padding: 18px 20px 18px 0;
         background: #0D0F0E;
         border: 1px solid var(--cx-card-border);
         box-shadow: inset 2px 2px 4px 1px rgba(0, 0, 0, 0.5), inset -1px -1px 2px 1px rgba(255, 255, 255, 0.03);
@@ -526,7 +531,7 @@
         const userRef = firebase.database().ref("users/" + userId);
         const snapshot = await userRef.once("value");
         const banBool = snapshot.val().banned;
-        if (user.email == "shreyamohanty.p6@gmail.com") {
+        if (user.email == "shashanksavarkar17@gmail.com") {
           document.getElementById("content").style.display = "block";
           document.getElementById("nostart").style.display = "none";
           document.getElementById("khatam").style.display = "none";

@@ -120,7 +120,7 @@
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      padding: 128px 48px 64px;
+      padding: 32px 48px 64px;
       gap: 32px;
     }
 
@@ -181,7 +181,7 @@
       font-weight: 400;
       font-size: clamp(32px, 5vw, 56px);
       letter-spacing: -2px;
-      color: var(--cx-red);
+      color: var(--cx-white);
     }
 
     .cx-lb-subtitle {
@@ -631,7 +631,7 @@
                 var userNameRef = firebase.database().ref('users/' + userId + '/name');
                 userNameRef.once('value').then(function (nameSnapshot) {
                     var userName = nameSnapshot.val() || 'Unknown';
-                    if (hide === 1 && firebase.auth().currentUser.email !== 'shreyamohanty.p6@gmail.com') {
+                    if (hide === 1 && firebase.auth().currentUser.email !== 'shashanksavarkar17@gmail.com') {
                         userName = 'Hidden';
                     }
 
