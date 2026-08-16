@@ -262,15 +262,34 @@
         padding: 18px 0 18px 0;
       }
 
-      .cx-hint-box {
+      /* Floating hint widget */
+      .cx-hint-widget {
         display: none;
-        flex-direction: column;
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 998;
+        width: 120px;
+        max-width: calc(100vw - 48px);
+        box-sizing: border-box;
+        background: var(--cx-card);
+        border: 1px solid var(--cx-card-border);
+        box-shadow: var(--cx-card-shadow);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: width .25s ease;
+      }
+
+      .cx-hint-widget--expanded {
+        width: min(340px, calc(100vw - 48px));
+      }
+
+      .cx-hint-widget-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         gap: 8px;
-        padding: 18px 20px;
-        background: #0D0F0E;
-        border: 1px dashed var(--cx-card-border);
-        border-radius: 16px;
-        box-shadow: var(--cx-pill-shadow);
+        padding: 14px 16px;
       }
 
       .cx-hint-label {
@@ -278,6 +297,40 @@
         align-items: center;
         gap: 8px;
         color: var(--cx-gold);
+        white-space: nowrap;
+      }
+
+      .cx-hint-toggle-btn {
+        flex-shrink: 0;
+        background: none;
+        border: none;
+        color: var(--cx-gold);
+        font-size: 15px;
+        line-height: 1;
+        padding: 4px;
+        cursor: pointer;
+      }
+
+      .cx-hint-preview {
+        margin: 0;
+        padding: 0 16px 16px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        letter-spacing: 3px;
+        color: var(--cx-muted);
+      }
+
+      .cx-hint-widget--expanded .cx-hint-preview {
+        display: none;
+      }
+
+      .cx-hint-body {
+        display: none;
+        padding: 0 20px 20px;
+      }
+
+      .cx-hint-widget--expanded .cx-hint-body {
+        display: block;
       }
 
       .cx-hint-text {
@@ -512,6 +565,11 @@
           flex: none;
           width: 100%;
         }
+
+        .cx-hint-widget {
+          right: 16px;
+          bottom: 16px;
+        }
       }
     </style>
   </head>
@@ -552,10 +610,6 @@
         <button id="fileButton" class="cx-btn-small" onclick="openFile()">
           <i class="fa-solid fa-paperclip"></i> View File
         </button>
-        <div id="hintBox" class="cx-hint-box">
-          <span class="cx-section-title cx-hint-label"><i class="fa-solid fa-lightbulb"></i> Hint</span>
-          <p id="hintText" class="cx-hint-text">********</p>
-        </div>
         <div class="cx-answer-row">
           <input type="text" id="answerInput" placeholder="Enter your answer" onkeydown="if (event.key === 'Enter') submitAnswer();" />
           <button id="submitButton" class="cx-btn-pill" onclick="submitAnswer()">Submit</button>
@@ -582,6 +636,31 @@
     </main>
 
     <div id="modal" class="modal" style="display: none"></div>
+
+    <div id="hintWidget" class="cx-hint-widget">
+      <div class="cx-hint-widget-head">
+        <span class="cx-section-title cx-hint-label"><i class="fa-solid fa-lightbulb"></i> Hint</span>
+        <button type="button" id="hintToggleBtn" class="cx-hint-toggle-btn" aria-label="Maximize hint" title="Maximize hint">
+          <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+        </button>
+      </div>
+      <p class="cx-hint-preview">***</p>
+      <div class="cx-hint-body">
+        <p id="hintText" class="cx-hint-text">********</p>
+      </div>
+    </div>
+    <script>
+      document.getElementById("hintToggleBtn").addEventListener("click", function () {
+        const widget = document.getElementById("hintWidget");
+        const icon = this.querySelector("i");
+        const expanded = widget.classList.toggle("cx-hint-widget--expanded");
+        this.setAttribute("aria-label", expanded ? "Minimize hint" : "Maximize hint");
+        this.title = expanded ? "Minimize hint" : "Maximize hint";
+        icon.className = expanded
+          ? "fa-solid fa-down-left-and-up-right-to-center"
+          : "fa-solid fa-up-right-and-down-left-from-center";
+      });
+    </script>
 
     <footer class="cx-footer">
       <div class="cx-footer-inner">
@@ -704,11 +783,11 @@
                       "none";
                   }
 
-                  const hintBox = document.getElementById("hintBox");
+                  const hintWidget = document.getElementById("hintWidget");
                   const hintText = document.getElementById("hintText");
                   if (questionData.hint) {
-                    hintBox.style.display = "flex";
-                    if (questionData.isHint) {
+                    hintWidget.style.display = "block";
+                    if (questionData.isHint === 1) {
                       hintText.innerText = questionData.hint;
                       hintText.classList.add("cx-hint-revealed");
                     } else {
@@ -716,7 +795,8 @@
                       hintText.classList.remove("cx-hint-revealed");
                     }
                   } else {
-                    hintBox.style.display = "none";
+                    hintWidget.style.display = "none";
+                    hintWidget.classList.remove("cx-hint-widget--expanded");
                   }
                 }
               },
