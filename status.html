@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Cryptonx'26</title>
+  <meta charset="UTF-8" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sekuya&family=JetBrains+Mono:wght@400;700&display=swap');
+
+    :root {
+      --cx-bg: #0D0F0E;
+      --cx-card-border: rgba(184, 148, 82, 0.25);
+      --cx-heading: #F1EEE6;
+      --cx-red: #D04A3A;
+      --cx-gold: #B89452;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      width: 400px;
+      height: 200px;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--cx-bg);
+      background-image:
+        repeating-linear-gradient(0deg, rgba(208, 74, 58, 0.06) 0px, rgba(208, 74, 58, 0.06) 1px, transparent 1px, transparent 20px),
+        repeating-linear-gradient(90deg, rgba(208, 74, 58, 0.06) 0px, rgba(208, 74, 58, 0.06) 1px, transparent 1px, transparent 20px);
+      position: relative;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .cx-frame {
+      position: absolute;
+      inset: 6px;
+      border: 1px solid var(--cx-card-border);
+      border-radius: 10px;
+    }
+
+    .cx-corner {
+      position: absolute;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      opacity: 0.55;
+    }
+
+    .cx-tl { top: 10px; left: 14px; font-size: 15px; color: var(--cx-red); }
+    .cx-br { bottom: 10px; right: 14px; font-size: 15px; color: var(--cx-gold); }
+    .cx-tr { top: 12px; right: 16px; font-size: 11px; color: var(--cx-gold); opacity: 0.4; }
+    .cx-bl { bottom: 13px; left: 16px; font-size: 11px; color: var(--cx-red); opacity: 0.4; }
+
+    .cx-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 0 30px;
+    }
+
+    .cx-tag {
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--cx-red);
+      margin-bottom: 8px;
+    }
+
+    .cx-tag::before { content: "< "; color: var(--cx-gold); }
+    .cx-tag::after { content: " />"; color: var(--cx-gold); }
+
+    h1 {
+      margin: 0;
+      font-family: 'Sekuya', 'Montserrat', sans-serif;
+      font-weight: 400;
+      font-size: 25px;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      color: var(--cx-heading);
+    }
+
+    .cx-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 0.85em;
+      vertical-align: -0.1em;
+      background: var(--cx-red);
+      margin-left: 3px;
+    }
+  </style>
+</head>
+
+<body>
+  <span class="cx-corner cx-tl">&lt;/&gt;</span>
+  <span class="cx-corner cx-tr">{ }</span>
+  <span class="cx-corner cx-bl">;</span>
+  <span class="cx-corner cx-br">&lt;/&gt;</span>
+  <div class="cx-frame"></div>
+
+  <div class="cx-content">
+    <div class="cx-tag">status</div>
+    <h1>Something is<br />cooking!!!<span class="cx-cursor"></span></h1>
+  </div>
+</body>
+</html>
