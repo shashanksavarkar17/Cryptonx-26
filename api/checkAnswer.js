@@ -1,5 +1,6 @@
 import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { getDatabase } from "firebase-admin/database";
+import { getAuth } from "firebase-admin/auth";
 
 // Initialize Firebase Admin only once
 if (!getApps().length) {
@@ -14,9 +15,10 @@ if (!getApps().length) {
 }
 
 const db = getDatabase();
+const adminAuth = getAuth();
 
 export default async function handler(req, res) {
-  // Only POST requests
+  // Only allow POST
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "Method not allowed",
@@ -24,9 +26,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    // --------------------------------
-    // 1. Get Firebase ID token
-    // --------------------------------
+    // --------------------------------------------------
+    // 1. Get Firebase Authentication token
+    // --------------------------------------------------
 
     const authHeader = req.headers.authorization;
 
@@ -36,21 +38,16 @@ export default async function handler(req, res) {
       });
     }
 
-    const idToken = authHeader.split("Bearer ")[1];
+    const idToken = authHeader.substring(7);
 
-    // --------------------------------
-    // 2. Verify the Firebase user
-    // --------------------------------
-
-    const { getAuth } = await import("firebase-admin/auth");
-
-    const decodedToken = await getAuth().verifyIdToken(idToken);
+    // Verify the Firebase user
+    const decodedToken = await adminAuth.verifyIdToken(idToken);
 
     const uid = decodedToken.uid;
 
-    // --------------------------------
-    // 3. Get level + submitted answer
-    // --------------------------------
+    // --------------------------------------------------
+    // 2. Get level + submitted answer from browser
+    // --------------------------------------------------
 
     const { level, answer } = req.body || {};
 
@@ -62,22 +59,33 @@ export default async function handler(req, res) {
 
     const levelKey = String(level);
 
-    // --------------------------------
-    // 4. Normalize submitted answer
-    // --------------------------------
+    // --------------------------------------------------
+    // 3. Normalize user's submitted answer
+    // --------------------------------------------------
 
     const submittedAnswer = String(answer)
       .trim()
       .replace(/[^a-zA-Z0-9]/g, "")
       .toLowerCase();
 
-    // --------------------------------
-    // 5. Read SECRET answer
-    // --------------------------------
+    if (!submittedAnswer) {
+      return res.status(400).json({
+        error: "Answer cannot be empty",
+      });
+    }
+
+    // --------------------------------------------------
+    // 4. Read SECRET answer from Firebase
     //
-    // This happens on Vercel.
-    // The browser NEVER receives this value.
+    // Firebase structure:
     //
+    // ans
+    //   └── 1
+    //       └── ans: "technocrats"
+    //
+    // This read happens ONLY on Vercel.
+    // The answer is never returned to the browser.
+    // --------------------------------------------------
 
     const answerSnapshot = await db
       .ref(`/ans/${levelKey}`)
@@ -85,43 +93,32 @@ export default async function handler(req, res) {
 
     const answerData = answerSnapshot.val();
 
-    if (!answerData || !answerData.ans) {
-      console.error(`Answer missing for level ${levelKey}`);
+    if (!answerData || typeof answerData.ans !== "string") {
+      console.error(`Answer not found for level ${levelKey}`);
 
       return res.status(404).json({
         error: "Answer not found",
       });
     }
 
-    const correctAnswer = String(answerData.ans)
+    const correctAnswer = answerData.ans
       .trim()
       .replace(/[^a-zA-Z0-9]/g, "")
       .toLowerCase();
 
-    // --------------------------------
-    // 6. Check answer
-    // --------------------------------
+    // --------------------------------------------------
+    // 5. Compare answers
+    // --------------------------------------------------
 
-if (submittedAnswer !== correctAnswer) {
-  console.log("Answer mismatch");
-  console.log("Level:", levelKey);
-  console.log("Submitted:", submittedAnswer);
-  console.log("Stored answer exists:", !!storedAnswer);
+    if (submittedAnswer !== correctAnswer) {
+      return res.status(200).json({
+        correct: false,
+      });
+    }
 
-  return res.status(200).json({
-    correct: false,
-    debug: {
-      level: levelKey,
-      storedAnswerFound: !!storedAnswer,
-      submittedLength: submittedAnswer.length,
-      storedLength: correctAnswer.length,
-    },
-  });
-}
-
-    // --------------------------------
-    // 7. Check whether level is already completed
-    // --------------------------------
+    // --------------------------------------------------
+    // 6. Check if this level was already completed
+    // --------------------------------------------------
 
     const completedRef = db.ref(`/users/${uid}/${levelKey}`);
 
@@ -134,33 +131,13 @@ if (submittedAnswer !== correctAnswer) {
       });
     }
 
-    // --------------------------------
-    // 8. Mark level completed
-    // --------------------------------
-
-    const timestamp = Date.now();
-
-    await completedRef.set(timestamp);
-
-    // --------------------------------
-    // 9. Add 100 points
-    // --------------------------------
-
-    const pointsRef = db.ref(`/users/${uid}/points`);
-
-    await pointsRef.transaction((currentPoints) => {
-      return (Number(currentPoints) || 0) + 100;
-    });
-
-    // --------------------------------
-    // 10. Update latest timestamp
-    // --------------------------------
-
-    await db.ref(`/users/${uid}/latest`).set(timestamp);
-
-    // --------------------------------
-    // 11. Return ONLY result
-    // --------------------------------
+    // --------------------------------------------------
+    // 7. Return success
+    //
+    // IMPORTANT:
+    // We are NOT updating points here because you asked
+    // to keep your existing browser-side points logic.
+    // --------------------------------------------------
 
     return res.status(200).json({
       correct: true,
@@ -169,6 +146,17 @@ if (submittedAnswer !== correctAnswer) {
 
   } catch (error) {
     console.error("checkAnswer error:", error);
+
+    // Authentication error
+    if (
+      error.code === "auth/id-token-expired" ||
+      error.code === "auth/argument-error" ||
+      error.code === "auth/id-token-revoked"
+    ) {
+      return res.status(401).json({
+        error: "Invalid or expired authentication token",
+      });
+    }
 
     return res.status(500).json({
       error: "Internal server error",
