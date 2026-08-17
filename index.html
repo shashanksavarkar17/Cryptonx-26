@@ -837,72 +837,185 @@
 //       sendToDiscord();
 //     });
 // }
-      function submitAnswer() {
+//       function submitAnswer() {
+//   const user = auth.currentUser;
+//   const userRef = database.ref(`/users/${user.uid}`);
+//   userRef
+//     .once("value")
+//     .then((snapshot) => {
+//       const userData = snapshot.val();
+//       const userPoints = userData.points || 0;
+//       const level = Math.floor(userPoints / 100) + 1;
+//       const answerInput = document
+//         .getElementById("answerInput")
+//         .value.trim()
+//         .replace(/[^a-zA-Z0-9]/g, "")
+//         .toLowerCase();
+
+//       if (answerInput) {
+//         document.getElementById("submitButton").disabled = true;
+
+//         const questionRef = database.ref(`/ans/${level}`);
+//         questionRef
+//           .once("value")
+//           .then((snapshot) => {
+//             const questionData = snapshot.val();
+
+//             if (questionData && questionData.ans !== undefined && questionData.ans !== null) {
+//               const correctAnswer = String(questionData.ans)
+//                 .trim()
+//                 .replace(/[^a-zA-Z0-9]/g, "")
+//                 .toLowerCase();
+
+//               if (answerInput === correctAnswer) {
+//                 const newPoints = userPoints + 100;
+//                 userRef.update({
+//                   points: newPoints,
+//                   latest: firebase.database.ServerValue.TIMESTAMP,
+//                 });
+//                 userRef
+//                   .child(level.toString())
+//                   .set(firebase.database.ServerValue.TIMESTAMP);
+
+//                 showSuccessModal();
+//                 setTimeout(() => {
+//                   location.reload();
+//                 }, 3000);
+//               } else {
+//                 showErrorModal();
+//               }
+//             } else {
+//               console.error(`No answer configured for level ${level}`);
+//               showErrorModal();
+//             }
+//           })
+//           .catch((error) => {
+//             console.error("Error retrieving question:", error);
+//             showErrorModal();
+//           })
+//           .finally(() => {
+//             setTimeout(() => {
+//               document.getElementById("submitButton").disabled = false;
+//             }, 3000);
+//           });
+//       }
+//     })
+//     .catch((error) => {
+//       console.error("Error retrieving user data:", error);
+//     });
+//   fetch("https://api64.ipify.org?format=json")
+//     .then((response) => response.json())
+//     .then((data) => {
+//       const ip = data.ip;
+//       const timestamp = Math.floor(new Date().getTime() / 1000);
+//       sendToDiscord(ip, timestamp);
+//     })
+//     .catch((error) => {
+//       sendToDiscord();
+//     });
+// }
+
+async function submitAnswer() {
   const user = auth.currentUser;
+
+  if (!user) {
+    console.error("User is not authenticated.");
+    showErrorModal();
+    return;
+  }
+
   const userRef = database.ref(`/users/${user.uid}`);
-  userRef
-    .once("value")
-    .then((snapshot) => {
-      const userData = snapshot.val();
-      const userPoints = userData.points || 0;
-      const level = Math.floor(userPoints / 100) + 1;
-      const answerInput = document
-        .getElementById("answerInput")
-        .value.trim()
-        .replace(/[^a-zA-Z0-9]/g, "")
-        .toLowerCase();
 
-      if (answerInput) {
-        document.getElementById("submitButton").disabled = true;
+  try {
+    const snapshot = await userRef.once("value");
 
-        const questionRef = database.ref(`/ans/${level}`);
-        questionRef
-          .once("value")
-          .then((snapshot) => {
-            const questionData = snapshot.val();
+    const userData = snapshot.val() || {};
+    const userPoints = userData.points || 0;
 
-            if (questionData && questionData.ans !== undefined && questionData.ans !== null) {
-              const correctAnswer = String(questionData.ans)
-                .trim()
-                .replace(/[^a-zA-Z0-9]/g, "")
-                .toLowerCase();
+    // KEEPING YOUR EXISTING BROWSER-SIDE LEVEL CALCULATION
+    const level = Math.floor(userPoints / 100) + 1;
 
-              if (answerInput === correctAnswer) {
-                const newPoints = userPoints + 100;
-                userRef.update({
-                  points: newPoints,
-                  latest: firebase.database.ServerValue.TIMESTAMP,
-                });
-                userRef
-                  .child(level.toString())
-                  .set(firebase.database.ServerValue.TIMESTAMP);
+    const answerInput = document
+      .getElementById("answerInput")
+      .value.trim()
+      .replace(/[^a-zA-Z0-9]/g, "")
+      .toLowerCase();
 
-                showSuccessModal();
-                setTimeout(() => {
-                  location.reload();
-                }, 3000);
-              } else {
-                showErrorModal();
-              }
-            } else {
-              console.error(`No answer configured for level ${level}`);
-              showErrorModal();
-            }
-          })
-          .catch((error) => {
-            console.error("Error retrieving question:", error);
-            showErrorModal();
-          })
-          .finally(() => {
-            setTimeout(() => {
-              document.getElementById("submitButton").disabled = false;
-            }, 3000);
-          });
-      }
-    })
-    .catch((error) => {
-      console.error("Error retrieving user data:", error);
+    if (!answerInput) {
+      return;
+    }
+
+    document.getElementById("submitButton").disabled = true;
+
+    // Get Firebase Authentication token
+    const idToken = await user.getIdToken();
+
+    // Send answer to Vercel.
+    // The browser NEVER reads /ans/{level}.
+    const response = await fetch("/api/checkAnswer", {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${idToken}`,
+      },
+
+      body: JSON.stringify({
+        level: level,
+        answer: answerInput,
+      }),
     });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error || "Answer verification failed"
+      );
+    }
+
+    // Vercel only returns true/false.
+    if (result.correct) {
+
+      // KEEPING YOUR EXISTING BROWSER-SIDE POINT UPDATE
+      const newPoints = userPoints + 100;
+
+      userRef.update({
+        points: newPoints,
+        latest: firebase.database.ServerValue.TIMESTAMP,
+      });
+
+      userRef
+        .child(level.toString())
+        .set(firebase.database.ServerValue.TIMESTAMP);
+
+      showSuccessModal();
+
+      setTimeout(() => {
+        location.reload();
+      }, 3000);
+
+    } else {
+
+      showErrorModal();
+
+      setTimeout(() => {
+        document.getElementById("submitButton").disabled = false;
+      }, 3000);
+    }
+
+  } catch (error) {
+
+    console.error("Error checking answer:", error);
+
+    showErrorModal();
+
+    setTimeout(() => {
+      document.getElementById("submitButton").disabled = false;
+    }, 3000);
+  }
+
+  // Keep your existing IP/Discord logging
   fetch("https://api64.ipify.org?format=json")
     .then((response) => response.json())
     .then((data) => {
@@ -910,11 +1023,10 @@
       const timestamp = Math.floor(new Date().getTime() / 1000);
       sendToDiscord(ip, timestamp);
     })
-    .catch((error) => {
+    .catch(() => {
       sendToDiscord();
     });
 }
-
 
       async function sendToDiscord(ip, timestamp) {
         const webhookURL =
