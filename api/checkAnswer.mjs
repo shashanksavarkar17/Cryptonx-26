@@ -1,5 +1,4 @@
 import { initializeApp, cert, getApps } from "firebase-admin/app";
-import { getDatabase } from "firebase-admin/database";
 import { getAuth } from "firebase-admin/auth";
 
 
@@ -31,8 +30,39 @@ if (!getApps().length) {
 }
 
 
-const db = getDatabase();
 const adminAuth = getAuth();
+
+// -------------------------------------------------
+// REST-based RTDB read (avoids the Admin SDK's
+// WebSocket client, which can hang/stall on cold
+// starts in serverless environments)
+// -------------------------------------------------
+async function readFromRTDB(path) {
+  const app = getApps()[0];
+  const accessToken = await app.options.credential.getAccessToken();
+
+  const url = `${process.env.FIREBASE_DATABASE_URL}${path}.json`;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken.access_token}`,
+      },
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`RTDB REST read failed: ${response.status}`);
+    }
+
+    return await response.json();
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 
 // =====================================================
@@ -126,12 +156,7 @@ export default async function handler(req, res) {
     // The browser NEVER performs this read.
     // -------------------------------------------------
 
-    const answerSnapshot = await db
-      .ref(`/ans/${levelKey}`)
-      .once("value");
-
-
-    const answerData = answerSnapshot.val();
+    const answerData = await readFromRTDB(`/ans/${levelKey}`);
 
 
     if (
