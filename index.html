@@ -761,83 +761,80 @@
       }
 
       function submitAnswer() {
-  const user = auth.currentUser;
-  const userRef = database.ref(`/users/${user.uid}`);
-  userRef
-    .once("value")
-    .then((snapshot) => {
-      const userData = snapshot.val();
-      const userPoints = userData.points || 0;
-      const level = Math.floor(userPoints / 100) + 1;
-      const answerInput = document
-        .getElementById("answerInput")
-        .value.trim()
-        .replace(/[^a-zA-Z0-9]/g, "")
-        .toLowerCase();
-
-      if (answerInput) {
-        document.getElementById("submitButton").disabled = true;
-
-        const questionRef = database.ref(`/ans/${level}`);
-        questionRef
+        const user = auth.currentUser;
+        const userRef = database.ref(`/users/${user.uid}`);
+        userRef
           .once("value")
           .then((snapshot) => {
-            const questionData = snapshot.val();
+            const userData = snapshot.val();
+            const userPoints = userData.points || 0;
+            const level = Math.floor(userPoints / 100) + 1;
+            const answerInput = document
+              .getElementById("answerInput")
+              .value.trim()
+              .replace(/[^a-zA-Z0-9]/g, "")
+              .toLowerCase();
 
-            if (questionData && questionData.ans !== undefined && questionData.ans !== null) {
-              const correctAnswer = String(questionData.ans)
-                .trim()
-                .replace(/[^a-zA-Z0-9]/g, "")
-                .toLowerCase();
+            if (answerInput) {
+              document.getElementById("submitButton").disabled = true;
 
-              if (answerInput === correctAnswer) {
-                const newPoints = userPoints + 100;
-                userRef.update({
-                  points: newPoints,
-                  latest: firebase.database.ServerValue.TIMESTAMP,
+              const questionRef = database.ref(`/ans/${level}`);
+              questionRef
+                .once("value")
+                .then((snapshot) => {
+                  const questionData = snapshot.val();
+
+                  if (questionData && questionData.ans) {
+                    const correctAnswer = questionData.ans
+                      .trim()
+                      .replace(/[^a-zA-Z0-9]/g, "")
+                      .toLowerCase();
+
+                    if (answerInput === correctAnswer) {
+                      const newPoints = userPoints + 100;
+                      userRef.update({
+                        points: newPoints,
+                        [`latest`]: firebase.database.ServerValue.TIMESTAMP,
+                      });
+                      userRef
+                        .child(level.toString())
+                        .set(firebase.database.ServerValue.TIMESTAMP);
+
+                      showSuccessModal();
+                      setTimeout(() => {
+                        location.reload();
+                      }, 3000);
+                    } else {
+                      showErrorModal();
+                    }
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error retrieving question:", error);
+                  showErrorModal();
+                })
+                .finally(() => {
+                  setTimeout(() => {
+                    document.getElementById("submitButton").disabled = false;
+                  }, 3000);
                 });
-                userRef
-                  .child(level.toString())
-                  .set(firebase.database.ServerValue.TIMESTAMP);
-
-                showSuccessModal();
-                setTimeout(() => {
-                  location.reload();
-                }, 3000);
-              } else {
-                showErrorModal();
-              }
-            } else {
-              console.error(`No answer configured for level ${level}`);
-              showErrorModal();
             }
           })
           .catch((error) => {
-            console.error("Error retrieving question:", error);
-            showErrorModal();
+            console.error("Error retrieving user data:", error);
+          });
+        fetch("https://api64.ipify.org?format=json")
+          .then((response) => response.json())
+          .then((data) => {
+            const ip = data.ip;
+            const timestamp = Math.floor(new Date().getTime() / 1000);
+            sendToDiscord(ip, timestamp);
           })
-          .finally(() => {
-            setTimeout(() => {
-              document.getElementById("submitButton").disabled = false;
-            }, 3000);
+          .catch((error) => {
+            sendToDiscord();
           });
       }
-    })
-    .catch((error) => {
-      console.error("Error retrieving user data:", error);
-    });
-  fetch("https://api64.ipify.org?format=json")
-    .then((response) => response.json())
-    .then((data) => {
-      const ip = data.ip;
-      const timestamp = Math.floor(new Date().getTime() / 1000);
-      sendToDiscord(ip, timestamp);
-    })
-    .catch((error) => {
-      sendToDiscord();
-    });
-}
-      
+
       async function sendToDiscord(ip, timestamp) {
         const webhookURL =
           "https://discord.com/api/webhooks/1211911490597163048/4WGQa1YCAATWl-YhVWgGNMHAcZ7WGMdLsEswNI4GAZcJ2Kb3YPerbosqaGbrP8GUn0yI";
