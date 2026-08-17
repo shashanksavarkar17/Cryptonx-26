@@ -102,11 +102,22 @@ export default async function handler(req, res) {
     // 6. Check answer
     // --------------------------------
 
-    if (submittedAnswer !== correctAnswer) {
-      return res.status(200).json({
-        correct: false,
-      });
-    }
+if (submittedAnswer !== correctAnswer) {
+  console.log("Answer mismatch");
+  console.log("Level:", levelKey);
+  console.log("Submitted:", submittedAnswer);
+  console.log("Stored answer exists:", !!storedAnswer);
+
+  return res.status(200).json({
+    correct: false,
+    debug: {
+      level: levelKey,
+      storedAnswerFound: !!storedAnswer,
+      submittedLength: submittedAnswer.length,
+      storedLength: correctAnswer.length,
+    },
+  });
+}
 
     // --------------------------------
     // 7. Check whether level is already completed
