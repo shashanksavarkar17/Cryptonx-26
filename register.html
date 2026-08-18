@@ -558,7 +558,7 @@
       flex-wrap: wrap;
       gap: 16px;
       max-width: 1184px;
-      margin: 0 auto 32px;
+      margin: 100px auto 32px;
       padding: 16px 24px;
       background: var(--cx-card);
       border: 1px solid var(--cx-card-border);
@@ -749,6 +749,10 @@
 
       .cx-main {
         padding: 96px 20px 48px;
+      }
+
+      .cx-page #profileCard {
+        margin-top: 24px;
       }
 
       .cx-page footer.cx-footer {
@@ -1284,11 +1288,6 @@
       document.getElementById('profileCard').style.display = 'none';
       document.getElementById('profileCard').style.justifyContent = 'center';
     }
-
-    document.addEventListener("DOMContentLoaded", function () {
-      const navbarHeight = document.getElementById('navbar').offsetHeight;
-      document.getElementById('profileCard').style.marginTop = navbarHeight + 'px';
-    });
 
     // Nav-bar Buttons
 

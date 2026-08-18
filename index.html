@@ -255,6 +255,9 @@
       #imageDisplay {
         display: none;
         max-width: 100%;
+        height: auto;
+        max-height: 420px;
+        object-fit: contain;
         margin: 0 auto 24px;
         border-radius: 16px;
         border: 1px solid var(--cx-card-border);
@@ -361,6 +364,20 @@
       .cx-state-card--danger .cx-state-icon,
       .cx-state-card--danger h1 {
         color: var(--cx-danger);
+      }
+
+      .cx-state-card--success h1 {
+        color: var(--cx-green);
+      }
+
+      .cx-finished-gif {
+        max-width: 100%;
+        height: auto;
+        max-height: 320px;
+        object-fit: contain;
+        border-radius: 16px;
+        border: 1px solid var(--cx-card-border);
+        box-shadow: var(--cx-pill-shadow);
       }
 
       /* Toast modal */
@@ -506,6 +523,14 @@
           width: 100%;
         }
 
+        #imageDisplay {
+          max-height: 260px;
+        }
+
+        .cx-finished-gif {
+          max-height: 220px;
+        }
+
         #submitButton {
           flex: none;
           width: 100%;
@@ -600,6 +625,12 @@
         <p>Thanks for playing Cryptonx'26. Check the leaderboard for the final standings.</p>
       </div>
 
+      <div id="finished" class="cx-card cx-state-card cx-state-card--success" style="display: none">
+        <img src="public/images/congrats.gif" alt="Congratulations!" class="cx-finished-gif" />
+        <h1>You cracked all 15 levels!</h1>
+        <p>Incredible work, cipher breaker. Check the leaderboard to see where you landed.</p>
+      </div>
+
       <div id="banned" class="cx-card cx-state-card cx-state-card--danger" style="display: none">
         <i class="fa-solid fa-ban cx-state-icon"></i>
         <h1>You have been banned from the hunt!</h1>
@@ -641,86 +672,36 @@
       const currentDate = new Date();
       const targetDate = new Date(2026, 7, 15, 0, 0, 0);
       const endDate = new Date(2026, 7, 18, 23, 59, 59);
-      // async function disp() {
-      //   const user = firebase.auth().currentUser;
-      //   const userId = user.uid;
-      //   const userRef = firebase.database().ref("users/" + userId);
-      //   const snapshot = await userRef.once("value");
-      //   const banBool = snapshot.val().banned;
-      //   if (user.email == "shreya.mohanty_btech23@gsv.ac.in") {
-      //     document.getElementById("content").style.display = "block";
-      //     document.getElementById("nostart").style.display = "none";
-      //     document.getElementById("khatam").style.display = "none";
-      //     document.getElementById("banned").style.display = "none";
-      //   } else if (banBool === 0) {
-      //     if (currentDate.getTime() <= targetDate.getTime()) {
-      //       document.getElementById("content").style.display = "none";
-      //       document.getElementById("nostart").style.display = "block";
-      //       document.getElementById("khatam").style.display = "none";
-      //       document.getElementById("banned").style.display = "none";
-      //     } else if (currentDate.getTime() >= endDate.getTime()) {
-      //       document.getElementById("content").style.display = "none";
-      //       document.getElementById("nostart").style.display = "none";
-      //       document.getElementById("khatam").style.display = "block";
-      //       document.getElementById("banned").style.display = "none";
-      //     } else {
-      //       document.getElementById("content").style.display = "block";
-      //       document.getElementById("nostart").style.display = "none";
-      //       document.getElementById("khatam").style.display = "none";
-      //       document.getElementById("banned").style.display = "none";
-      //     }
-      //   } else if (banBool === 1) {
-      //     document.getElementById("content").style.display = "none";
-      //     document.getElementById("nostart").style.display = "none";
-      //     document.getElementById("khatam").style.display = "none";
-      //     document.getElementById("banned").style.display = "block";
-      //   }
-      // }
-
+      const TOTAL_LEVELS = 15;
       async function disp() {
-    const user = firebase.auth().currentUser;
-    const userId = user.uid;
-    const userRef = firebase.database().ref("users/" + userId);
-    const snapshot = await userRef.once("value");
-    
-    // 1. Safely extract values and assign defaults if the snapshot returns null
-    const userData = snapshot.val();
-    const banBool = userData ? userData.banned : 0; 
-    
-    // 2. Exception bypass logic for the admin accounts
-    if (user.email === "atulya.bharat_btech24@gsv.ac.in" || user.email === "savarkar.shashank_btech24@gsv.ac.in") {
-        document.getElementById("content").style.display = "block"; // Fixed spelling and changed "black" to "block"
-        document.getElementById("nostart").style.display = "none";
-        document.getElementById("khatan").style.display = "none";
-        document.getElementById("banned").style.display = "none";
-    } 
-    // 3. Check if user is banned (banBool === 1 or true)
-    else if (banBool == 1) { 
+        const user = firebase.auth().currentUser;
+        const userId = user.uid;
+        const userRef = firebase.database().ref("users/" + userId);
+        const snapshot = await userRef.once("value");
+        const userData = snapshot.val() || {};
+        const banBool = userData.banned;
+        const allLevelsDone = (userData.points || 0) >= TOTAL_LEVELS * 100;
+
         document.getElementById("content").style.display = "none";
         document.getElementById("nostart").style.display = "none";
-        document.getElementById("khatan").style.display = "none";
-        document.getElementById("banned").style.display = "block";
-    } 
-    // 4. Normal unbanned user workflow
-    else { 
-        if (currentDate.getTime() <= targetDate.getTime()) {
-            document.getElementById("content").style.display = "none";
-            document.getElementById("nostart").style.display = "block";
-            document.getElementById("khatan").style.display = "none";
-            document.getElementById("banned").style.display = "none";
+        document.getElementById("khatam").style.display = "none";
+        document.getElementById("banned").style.display = "none";
+        document.getElementById("finished").style.display = "none";
+
+        if (user.email === "atulya.bharat_btech24@gsv.ac.in" || user.email === "savarkar.shashank_btech24@gsv.ac.in") {
+          document.getElementById("content").style.display = "block";
+        } else if (banBool == 1) {
+          document.getElementById("banned").style.display = "block";
+        } else if (allLevelsDone) {
+          document.getElementById("finished").style.display = "block";
+        } else if (currentDate.getTime() <= targetDate.getTime()) {
+          document.getElementById("nostart").style.display = "block";
         } else if (currentDate.getTime() >= endDate.getTime()) {
-            document.getElementById("content").style.display = "none";
-            document.getElementById("nostart").style.display = "none";
-            document.getElementById("khatan").style.display = "block";
-            document.getElementById("banned").style.display = "none";
+          document.getElementById("khatam").style.display = "block";
         } else {
-            document.getElementById("content").style.display = "block";
-            document.getElementById("nostart").style.display = "none";
-            document.getElementById("khatan").style.display = "none";
-            document.getElementById("banned").style.display = "none";
+          document.getElementById("content").style.display = "block";
         }
-    }
-}
+      }
 
 
       auth.onAuthStateChanged((user) => {
@@ -738,6 +719,9 @@
           .once("value")
           .then((snapshot) => {
             const userPoints = snapshot.val() || 0;
+            if (userPoints >= TOTAL_LEVELS * 100) {
+              return;
+            }
             const level = Math.floor(userPoints / 100) + 1;
 
             document.getElementById("levelTitle").innerText = `Level ${level}`;
@@ -1010,16 +994,6 @@ async function submitAnswer() {
           modal.style.display = "none";
         }, 3000);
       }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const navbarHeight = document.getElementById("navbar").offsetHeight;
-        document.getElementById("content").style.marginTop =
-          navbarHeight + "px";
-        document.getElementById("nostart").style.marginTop =
-          navbarHeight + "px";
-        document.getElementById("khatam").style.marginTop = navbarHeight + "px";
-        document.getElementById("banned").style.marginTop = navbarHeight + "px";
-      });
 
       // Nav-bar Buttons
 
