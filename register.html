@@ -640,6 +640,17 @@
       color: var(--cx-red);
     }
 
+    a.cx-btn-small {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    a.cx-btn-small:hover {
+      color: var(--cx-gold);
+    }
+
     /* Footer */
     .cx-page footer.cx-footer {
       background: #080909;
@@ -1007,6 +1018,7 @@
       </div>
       <div class="cx-profile-actions">
         <button id="signOutButton" class="cx-btn-small">Sign Out</button>
+        <a id="whatsappCommunity" class="cx-btn-small" href="https://chat.whatsapp.com/DM80nsJE2MpDYaAgcpSKZ1" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Join Community</a>
         <button id="play" class="cx-btn-small cx-btn-small--primary" onclick="play()">Play</button>
       </div>
     </div>
@@ -1208,7 +1220,7 @@
 
  auth.onAuthStateChanged(user => {
   if (user) {
-    if (user.email.endsWith("btech24@gsv.ac.in") || user.email === "shashanksavarkar17@gmail.com" || user.email === "shruti.verma_btech23@gsv.ac.in" || user.email === "savarkar.shashank_btech24@gsv.ac.in") {
+    if (user.email.endsWith("btech24@gsv.ac.in") || user.email === "atulya.bharat_btech24@gsv.ac.in" || user.email === "shruti.verma_btech23@gsv.ac.in" || user.email === "savarkar.shashank_btech24@gsv.ac.in" || user.email === "abhinav.mishra_btech24@gsv.ac.in" || user.email === "shreya.mohanty_btech23@gsv.ac.in" || user.email === "shashanksavarkar17@gmail.com") {
       updateProfileCard(user);
     } else {
       alert("Only GSV FY students can sign in.");

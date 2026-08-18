@@ -4,3 +4,9 @@ SESSION_HANDOFF.md
 .env
 promo/
 Media/
+.vercel
+cryptonx-gsv-default-rtdb-export.json
+cryptonx-gsv-default-rtdb-export_for_abhilasha.json
+cryptonx-gsv-default-rtdb-export_new.json
+cryptonx-gsv-default-rtdb-export_working.json
+Cryptonx-GSV-Questions-Answers.pdf
