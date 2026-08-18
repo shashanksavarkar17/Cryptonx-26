@@ -134,21 +134,28 @@ export default async function handler(req, res) {
 
 
     // -------------------------------------------------
-    // 3. Build public standings (names redacted per "hide")
+    // 3. Build public standings (Removes hidden/unknown users)
     // -------------------------------------------------
 
     let you = null;
 
-    const standings = users.map(function ([uid, user], index) {
+    // CHANGED: Filter out hidden or nameless records entirely before generating ranks
+    const visibleUsers = users.filter(function ([uid, user]) {
+      // If the caller is an admin, always keep everyone visible
+      if (isAdmin) return true;
+
+      // Condition checking if the user profile wants to hide or has no name string
+      const isHidden = user.hide == 1 || user.hide === true || !user.name || user.name.trim() === "" || user.name.toLowerCase() === "unknown";
+      
+      // Return true to keep user, false to remove them completely
+      return !isHidden;
+    });
+
+    // CHANGED: Map through the newly filtered array so rankings scale sequentially
+    const standings = visibleUsers.map(function ([uid, user], index) {
       const rank = index + 1;
       const points = user.points || 0;
-      
-      // CHANGED: Flexible evaluation for 'hide' data types and handles missing names safely
-      const isUserHidden = user.hide == 1 || user.hide === true || !user.name;
-      const hidden = isUserHidden && !isAdmin;
-      
-      // CHANGED: Replaced "Unknown" fallback with "Hidden" if flag conditions match
-      const name = hidden ? "Hidden" : (user.name || "Participant");
+      const name = user.name || "Participant";
 
       if (uid === callerUid) {
         you = { rank, points };
@@ -163,7 +170,7 @@ export default async function handler(req, res) {
     // -------------------------------------------------
 
     return res.status(200).json({
-      count: users.length,
+      count: visibleUsers.length,
       standings,
       you,
     });
@@ -180,7 +187,6 @@ export default async function handler(req, res) {
     });
   }
 }
-
 
 // import { initializeApp, cert, getApps } from "firebase-admin/app";
 // import { getAuth } from "firebase-admin/auth";
