@@ -679,39 +679,33 @@
       measurementId: "G-XXHP9R1FEH"
     };
         firebase.initializeApp(firebaseConfig);
-        var usersRef = firebase.database().ref('users');
 
-        usersRef.once('value').then(function (snapshot) {
+        function fetchLeaderboard() {
+            var user = firebase.auth().currentUser;
+            var headersPromise = user ? user.getIdToken().then(function (token) {
+                return { Authorization: 'Bearer ' + token };
+            }) : Promise.resolve({});
+
+            return headersPromise.then(function (headers) {
+                return fetch('/api/leaderboard', { headers: headers }).then(function (res) {
+                    if (!res.ok) throw new Error('Leaderboard request failed: ' + res.status);
+                    return res.json();
+                });
+            });
+        }
+
+        fetchLeaderboard().then(function (data) {
             const table = document.querySelector('table');
             table.querySelectorAll("tr:not(:first-child):not(:nth-child(2))").forEach(row => row.remove());
-            if (!snapshot.exists()) return;
-            var users = Object.entries(snapshot.val());
-            users.sort(function (a, b) {
-                if (b[1].points !== a[1].points) {
-                    return b[1].points - a[1].points;
-                } else {
-                    return a[1].latest - b[1].latest;
-                }
-            });
 
-            const currentUserEmail = firebase.auth().currentUser && firebase.auth().currentUser.email;
             var rows = "";
-            var rank = 1;
-
-            users.forEach(function (user) {
-                var points = user[1].points;
-                var hide = user[1].hide;
-                var userName = user[1].name || 'Unknown';
-
-                if (hide === 1 && currentUserEmail !== 'shashanksavarkar17@gmail.com') {
-                    userName = 'Hidden';
-                }
-
-                rows += "<tr><td>" + rank + "</td><td>" + userName + "</td><td>" + points + "</td></tr>";
-                rank++;
+            (data.standings || []).forEach(function (entry) {
+                rows += "<tr><td>" + entry.rank + "</td><td>" + entry.name + "</td><td>" + entry.points + "</td></tr>";
             });
 
             table.insertAdjacentHTML('beforeend', rows);
+        }).catch(function (error) {
+            console.error('Error loading leaderboard:', error);
         });
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -762,36 +756,22 @@
       tick();
       setInterval(tick, 1000);
 
-      var statsRef = firebase.database().ref('users');
-      statsRef.once('value').then(function (snapshot) {
+      function renderSidebarStats(data) {
         var participantCountEl = document.getElementById('lbParticipantCount');
-        if (!snapshot.exists()) {
-          participantCountEl.textContent = '0';
-          return;
-        }
-        var users = Object.entries(snapshot.val());
-        participantCountEl.textContent = users.length;
+        participantCountEl.textContent = data.count || 0;
 
-        users.sort(function (a, b) {
-          if (b[1].points !== a[1].points) {
-            return b[1].points - a[1].points;
-          } else {
-            return a[1].latest - b[1].latest;
-          }
-        });
-
-        firebase.auth().onAuthStateChanged(function (user) {
-          if (!user) return;
-          var idx = users.findIndex(function (u) { return u[0] === user.uid; });
-          if (idx === -1) return;
-          var points = users[idx][1].points || 0;
+        if (data.you) {
           var box = document.getElementById('lbYourStanding');
           box.innerHTML =
-            '<div class="cx-lb-standing-rank">Rank #' + (idx + 1) + '</div>' +
-            '<div class="cx-lb-standing-points">' + points + ' pts</div>';
+            '<div class="cx-lb-standing-rank">Rank #' + data.you.rank + '</div>' +
+            '<div class="cx-lb-standing-points">' + data.you.points + ' pts</div>';
+        }
+      }
+
+      firebase.auth().onAuthStateChanged(function () {
+        fetchLeaderboard().then(renderSidebarStats).catch(function (error) {
+          console.error('Error loading sidebar stats:', error);
         });
-      }).catch(function (error) {
-        console.error('Error loading sidebar stats:', error);
       });
     })();
   </script>
