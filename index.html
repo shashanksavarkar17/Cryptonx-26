@@ -647,7 +647,7 @@
         const userRef = firebase.database().ref("users/" + userId);
         const snapshot = await userRef.once("value");
         const banBool = snapshot.val().banned;
-        if (user.email == "shashanksavarkar17@gmail.com") {
+        if (user.email == "shreya.mohanty_btech23@gsv.ac.in") {
           document.getElementById("content").style.display = "block";
           document.getElementById("nostart").style.display = "none";
           document.getElementById("khatam").style.display = "none";
