@@ -641,41 +641,87 @@
       const currentDate = new Date();
       const targetDate = new Date(2026, 7, 15, 0, 0, 0);
       const endDate = new Date(2026, 7, 18, 23, 59, 59);
+      // async function disp() {
+      //   const user = firebase.auth().currentUser;
+      //   const userId = user.uid;
+      //   const userRef = firebase.database().ref("users/" + userId);
+      //   const snapshot = await userRef.once("value");
+      //   const banBool = snapshot.val().banned;
+      //   if (user.email == "shreya.mohanty_btech23@gsv.ac.in") {
+      //     document.getElementById("content").style.display = "block";
+      //     document.getElementById("nostart").style.display = "none";
+      //     document.getElementById("khatam").style.display = "none";
+      //     document.getElementById("banned").style.display = "none";
+      //   } else if (banBool === 0) {
+      //     if (currentDate.getTime() <= targetDate.getTime()) {
+      //       document.getElementById("content").style.display = "none";
+      //       document.getElementById("nostart").style.display = "block";
+      //       document.getElementById("khatam").style.display = "none";
+      //       document.getElementById("banned").style.display = "none";
+      //     } else if (currentDate.getTime() >= endDate.getTime()) {
+      //       document.getElementById("content").style.display = "none";
+      //       document.getElementById("nostart").style.display = "none";
+      //       document.getElementById("khatam").style.display = "block";
+      //       document.getElementById("banned").style.display = "none";
+      //     } else {
+      //       document.getElementById("content").style.display = "block";
+      //       document.getElementById("nostart").style.display = "none";
+      //       document.getElementById("khatam").style.display = "none";
+      //       document.getElementById("banned").style.display = "none";
+      //     }
+      //   } else if (banBool === 1) {
+      //     document.getElementById("content").style.display = "none";
+      //     document.getElementById("nostart").style.display = "none";
+      //     document.getElementById("khatam").style.display = "none";
+      //     document.getElementById("banned").style.display = "block";
+      //   }
+      // }
+
       async function disp() {
-        const user = firebase.auth().currentUser;
-        const userId = user.uid;
-        const userRef = firebase.database().ref("users/" + userId);
-        const snapshot = await userRef.once("value");
-        const banBool = snapshot.val().banned;
-        if (user.email == "shreya.mohanty_btech23@gsv.ac.in") {
-          document.getElementById("content").style.display = "block";
-          document.getElementById("nostart").style.display = "none";
-          document.getElementById("khatam").style.display = "none";
-          document.getElementById("banned").style.display = "none";
-        } else if (banBool === 0) {
-          if (currentDate.getTime() <= targetDate.getTime()) {
+    const user = firebase.auth().currentUser;
+    const userId = user.uid;
+    const userRef = firebase.database().ref("users/" + userId);
+    const snapshot = await userRef.once("value");
+    
+    // 1. Safely extract values and assign defaults if the snapshot returns null
+    const userData = snapshot.val();
+    const banBool = userData ? userData.banned : 0; 
+    
+    // 2. Exception bypass logic for the admin account
+    if (user.email === "shreya.mohanty_btech23@gsv.ac.in") {
+        document.getElementById("content").style.display = "black"; // Note: Consider changing "black" to "block" if this was a typo!
+        document.getElementById("nostart").style.display = "none";
+        document.getElementById("khatan").style.display = "none";
+        document.getElementById("banned").style.display = "none";
+    } 
+    // 3. Check if user is banned (banBool === 1 or true)
+    else if (banBool == 1) { 
+        document.getElementById("content").style.display = "none";
+        document.getElementById("nostart").style.display = "none";
+        document.getElementById("khatan").style.display = "none";
+        document.getElementById("banned").style.display = "block";
+    } 
+    // 4. Normal unbanned user workflow
+    else { 
+        if (currentDate.getTime() <= targetDate.getTime()) {
             document.getElementById("content").style.display = "none";
             document.getElementById("nostart").style.display = "block";
-            document.getElementById("khatam").style.display = "none";
+            document.getElementById("khatan").style.display = "none";
             document.getElementById("banned").style.display = "none";
-          } else if (currentDate.getTime() >= endDate.getTime()) {
+        } else if (currentDate.getTime() >= endDate.getTime()) {
             document.getElementById("content").style.display = "none";
             document.getElementById("nostart").style.display = "none";
-            document.getElementById("khatam").style.display = "block";
+            document.getElementById("khatan").style.display = "block";
             document.getElementById("banned").style.display = "none";
-          } else {
+        } else {
             document.getElementById("content").style.display = "block";
             document.getElementById("nostart").style.display = "none";
-            document.getElementById("khatam").style.display = "none";
+            document.getElementById("khatan").style.display = "none";
             document.getElementById("banned").style.display = "none";
-          }
-        } else if (banBool === 1) {
-          document.getElementById("content").style.display = "none";
-          document.getElementById("nostart").style.display = "none";
-          document.getElementById("khatam").style.display = "none";
-          document.getElementById("banned").style.display = "block";
         }
-      }
+    }
+}
+
 
       auth.onAuthStateChanged((user) => {
         if (!user) {
