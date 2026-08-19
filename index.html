@@ -616,7 +616,7 @@
       <div id="nostart" class="cx-card cx-state-card" style="display: none">
         <i class="fa-solid fa-hourglass-half cx-state-icon"></i>
         <h1>Hunt hasn't started yet</h1>
-        <p>Check back later &mdash; the countdown is still running.</p>
+        <p>Check back later - the countdown is still running.</p>
       </div>
 
       <div id="khatam" class="cx-card cx-state-card" style="display: none">
@@ -670,8 +670,8 @@
       const database = firebase.database();
 
       const currentDate = new Date();
-      const targetDate = new Date(2026, 8, 19, 1, 38, 0);
-      const endDate = new Date(2026, 8, 25, 23, 59, 59);
+      const targetDate = new Date(2026, 7, 20, 0, 0, 0);
+      const endDate = new Date(2026, 7, 25, 23, 59, 59);
       const TOTAL_LEVELS = 15;
       async function disp() {
         const user = firebase.auth().currentUser;
