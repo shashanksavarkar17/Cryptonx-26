@@ -1246,22 +1246,11 @@
         });
     }
 
-//  auth.onAuthStateChanged(user => {
-//   if (user) {
-//     if (user.email.endsWith("btech24@gsv.ac.in") || user.email === "atulya.bharat_btech24@gsv.ac.in" || user.email === "shruti.verma_btech23@gsv.ac.in" || user.email === "savarkar.shashank_btech24@gsv.ac.in" || user.email === "abhinav.mishra_btech24@gsv.ac.in" || user.email === "shreya.mohanty_btech23@gsv.ac.in" || user.email === "shashanksavarkar17@gmail.com") {
-//       updateProfileCard(user);
-//     } else {
-//       alert("Only GSV FY students can sign in.");
-//       auth.signOut();
-//     }
-//   } else {
-//     handleSignOut();
-//   }
-// });
+// Comment this incase of any issues with the email verification
 
  auth.onAuthStateChanged(user => {
   if (user) {
-    if (user.email.endsWith("@gmail.com") || user.email.endsWith("btech26@gsv.ac.in") || user.email === "atulya.bharat_btech24@gsv.ac.in" || user.email === "shruti.verma_btech23@gsv.ac.in" || user.email === "savarkar.shashank_btech24@gsv.ac.in" || user.email === "abhinav.mishra_btech24@gsv.ac.in" || user.email === "shreya.mohanty_btech23@gsv.ac.in" || user.email === "shashanksavarkar17@gmail.com") {
+    if (user.email.endsWith("btech26@gsv.ac.in") || user.email === "atulya.bharat_btech24@gsv.ac.in" || user.email === "shruti.verma_btech23@gsv.ac.in" || user.email === "savarkar.shashank_btech24@gsv.ac.in" || user.email === "abhinav.mishra_btech24@gsv.ac.in" || user.email === "shreya.mohanty_btech23@gsv.ac.in" || user.email === "shashanksavarkar17@gmail.com") {
       updateProfileCard(user);
     } else {
       alert("Only GSV FY students can sign in.");
@@ -1271,6 +1260,23 @@
     handleSignOut();
   }
 });
+
+// -------------------------
+
+// In case of any issues uncomment this 
+
+//  auth.onAuthStateChanged(user => {
+//   if (user) {
+//     if (user.email.endsWith("@gmail.com") || user.email.endsWith("btech26@gsv.ac.in") || user.email === "atulya.bharat_btech24@gsv.ac.in" || user.email === "shruti.verma_btech23@gsv.ac.in" || user.email === "savarkar.shashank_btech24@gsv.ac.in" || user.email === "abhinav.mishra_btech24@gsv.ac.in" || user.email === "shreya.mohanty_btech23@gsv.ac.in" || user.email === "shashanksavarkar17@gmail.com") {
+//       updateProfileCard(user);
+//     } else {
+//       alert("Only GSV FY students can sign in.");
+//       auth.signOut();
+//     }
+//   } else {
+//     handleSignOut();
+//   }
+// });
 
     document.getElementById('signInButton').addEventListener('click', () => {
       const provider = new firebase.auth.GoogleAuthProvider();
